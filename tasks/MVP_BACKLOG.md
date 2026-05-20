@@ -11,16 +11,16 @@
 ## Epic 2 — UI
 
 - [x] App shell mobile-first
-- [ ] Carte placeholder
+- [x] Carte placeholder
 - [ ] Result card mockée
 - [ ] Profil altimétrique mocké
 - [ ] États loading/error
 
 ## Epic 3 — Position
 
-- [ ] Geolocation API
-- [ ] Clic carte
-- [ ] Précision GPS
+- [x] Geolocation API
+- [x] Clic carte
+- [x] Précision GPS
 - [ ] Coordonnées manuelles optionnelles
 
 ## Epic 4 — Calcul solaire
