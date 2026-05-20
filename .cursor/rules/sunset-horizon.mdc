@@ -1,0 +1,81 @@
+---
+description: Project rules for Sunset Horizon React TypeScript app
+alwaysApply: true
+---
+
+# Sunset Horizon — Cursor Rules
+
+You are working on Sunset Horizon, a static React + TypeScript web app hosted on GitHub Pages.
+
+## Product goal
+
+Calculate the real sunset time behind terrain, not the official flat-horizon sunset time.
+
+## Non-negotiable constraints
+
+- No backend.
+- No Supabase.
+- No user account.
+- Use browser-side computation.
+- Use localStorage first; IndexedDB only if needed for large local cache.
+- Keep the app deployable to GitHub Pages.
+- Never add secrets or private API keys.
+- Do not invent IGN API parameters. Isolate IGN calls in one client so they can be corrected easily.
+
+## Technical stack
+
+- React
+- TypeScript strict
+- Vite
+- Tailwind CSS
+- Leaflet / React Leaflet
+- Recharts
+- SunCalc or Astronomy Engine
+- Vitest
+
+## Architecture rules
+
+Put domain logic in pure modules:
+
+- `features/solar`
+- `features/terrain`
+- `features/horizon`
+- `lib/geo`
+- `lib/storage`
+
+Do not put calculation logic directly inside React components.
+
+React components should orchestrate state and render UI only.
+
+## Testing rules
+
+Add unit tests for:
+
+- distance computation;
+- destination point from azimuth;
+- apparent terrain angle;
+- blocking sample selection;
+- sunset crossing interpolation;
+- storage serialization.
+
+## UI rules
+
+- Mobile-first.
+- Dark theme.
+- Large corrected sunset time.
+- Always distinguish official sunset from terrain-corrected sunset.
+- Always display uncertainty and data source.
+- Include clear error states for geolocation and IGN failures.
+
+## Safety rules
+
+For geolocation:
+
+- request user permission only from explicit action;
+- show fallback manual selection if denied.
+
+For external API:
+
+- handle rate limits;
+- debounce recalculations;
+- avoid repeated calls on every minor state update.
