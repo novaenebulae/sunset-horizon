@@ -1,1 +1,1 @@
-export {}
+export { OfficialSunsetCard } from './OfficialSunsetCard'

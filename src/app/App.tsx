@@ -1,12 +1,18 @@
+import { useState } from 'react'
 import { AppShell } from '@/components/AppShell'
+import { DateSelector } from '@/components/DateSelector'
 import { Header } from '@/components/Header'
 import {
   LocationControls,
   MapPanel,
   useObserverPosition,
 } from '@/features/map'
+import { OfficialSunsetCard } from '@/features/results'
+import { useSolarData } from '@/features/solar'
+import { todayAtLocalNoon } from '@/lib/time'
 
 export function App() {
+  const [observationDate, setObservationDate] = useState(todayAtLocalNoon)
   const {
     state,
     position,
@@ -15,6 +21,12 @@ export function App() {
     clearError,
     isLoading,
   } = useObserverPosition()
+
+  const solar = useSolarData({
+    position,
+    observationDate,
+    applyRefraction: true,
+  })
 
   return (
     <AppShell>
@@ -28,6 +40,8 @@ export function App() {
           onRequestGps={requestGps}
           onClearError={clearError}
         />
+        <DateSelector value={observationDate} onChange={setObservationDate} />
+        <OfficialSunsetCard solar={solar} hasPosition={position !== null} />
       </main>
     </AppShell>
   )

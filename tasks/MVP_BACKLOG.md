@@ -25,11 +25,11 @@
 
 ## Epic 4 — Calcul solaire
 
-- [ ] Coucher officiel
-- [ ] Azimut solaire
-- [ ] Altitude solaire
-- [ ] Fenêtre d'échantillonnage
-- [ ] Tests unitaires
+- [x] Coucher officiel
+- [x] Azimut solaire
+- [x] Altitude solaire
+- [x] Fenêtre d'échantillonnage
+- [x] Tests unitaires
 
 ## Epic 5 — IGN terrain
 

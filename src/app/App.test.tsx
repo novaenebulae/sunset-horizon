@@ -3,9 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { App } from '@/app/App'
 
 vi.mock('@/features/map/MapPanel', () => ({
-  MapPanel: () => (
-    <div data-testid="map-panel">Carte (mock)</div>
-  ),
+  MapPanel: () => <div data-testid="map-panel">Carte (mock)</div>,
 }))
 
 describe('App', () => {
@@ -21,10 +19,15 @@ describe('App', () => {
     ).toBeInTheDocument()
   })
 
-  it('affiche le message initial de sélection', () => {
+  it('affiche le sélecteur de date', () => {
+    render(<App />)
+    expect(screen.getByLabelText(/date d'observation/i)).toBeInTheDocument()
+  })
+
+  it('affiche le message initial pour le coucher officiel', () => {
     render(<App />)
     expect(
-      screen.getByText(/choisis un point sur la carte/i),
+      screen.getByText(/sélectionne un point pour voir le coucher officiel/i),
     ).toBeInTheDocument()
   })
 })
