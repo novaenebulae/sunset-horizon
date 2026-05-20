@@ -41,16 +41,32 @@ L'application doit répondre rapidement à trois questions :
 - Vitest
 - Playwright optionnel
 
-## Commandes initiales
+## Développement
+
+Prérequis : Node.js 20+.
 
 ```bash
-npm create vite@latest sunset-horizon -- --template react-ts
-cd sunset-horizon
 npm install
-npm install leaflet react-leaflet recharts suncalc date-fns
-npm install -D tailwindcss postcss autoprefixer vitest @testing-library/react @testing-library/jest-dom jsdom
-npx tailwindcss init -p
+npm run dev      # serveur local http://localhost:5173
+npm run build    # build production dans dist/
+npm run test     # tests Vitest
+npm run preview  # prévisualiser le build (base /sunset-horizon/)
 ```
+
+### Déploiement GitHub Pages
+
+- URL publique : `https://<votre-compte>.github.io/sunset-horizon/`
+- Le workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) publie automatiquement sur chaque push vers `main`.
+- Dans les paramètres du dépôt GitHub : **Pages → Source : GitHub Actions**.
+
+### Phase 0 (état actuel)
+
+- React + Vite + TypeScript strict + Tailwind v4
+- Page d'accueil minimale (thème sombre)
+- Arborescence `src/` prête pour les features
+- Pas encore : géolocalisation, calcul solaire, API IGN
+
+Les dépendances Leaflet, Recharts et SunCalc seront ajoutées aux phases suivantes.
 
 ## Structure cible
 

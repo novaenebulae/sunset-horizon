@@ -2,15 +2,15 @@
 
 ## Epic 1 — Setup
 
-- [ ] Initialiser React + Vite + TypeScript
-- [ ] Installer Tailwind
-- [ ] Configurer structure projet
-- [ ] Configurer GitHub Pages
-- [ ] Ajouter GitHub Actions build
+- [x] Initialiser React + Vite + TypeScript
+- [x] Installer Tailwind
+- [x] Configurer structure projet
+- [x] Configurer GitHub Pages
+- [x] Ajouter GitHub Actions build
 
 ## Epic 2 — UI
 
-- [ ] App shell mobile-first
+- [x] App shell mobile-first
 - [ ] Carte placeholder
 - [ ] Result card mockée
 - [ ] Profil altimétrique mocké
