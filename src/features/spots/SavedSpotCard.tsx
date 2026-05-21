@@ -1,9 +1,14 @@
+import { CalculationHistoryList } from '@/features/history/CalculationHistoryList'
+import type { CalculationHistoryEntry } from '@/features/history/calculationHistoryTypes'
 import type { SavedSpot } from './spotTypes'
 
 type SavedSpotCardProps = {
   spot: SavedSpot
+  historyEntries: CalculationHistoryEntry[]
   onLoad: (spot: SavedSpot) => void
   onDelete: (spot: SavedSpot) => void
+  onDeleteHistoryEntry: (entry: CalculationHistoryEntry) => void
+  onClearSpotHistory: (spot: SavedSpot) => void
 }
 
 function formatCoord(value: number, decimals: number): string {
@@ -28,7 +33,14 @@ function formatLastComputed(iso: string | undefined): string | null {
   })
 }
 
-export function SavedSpotCard({ spot, onLoad, onDelete }: SavedSpotCardProps) {
+export function SavedSpotCard({
+  spot,
+  historyEntries,
+  onLoad,
+  onDelete,
+  onDeleteHistoryEntry,
+  onClearSpotHistory,
+}: SavedSpotCardProps) {
   const deltaLabel = formatDelta(spot.lastComputedResult?.deltaMinutes)
   const lastComputedLabel = formatLastComputed(spot.lastComputedAt)
 
@@ -86,6 +98,22 @@ export function SavedSpotCard({ spot, onLoad, onDelete }: SavedSpotCardProps) {
           Supprimer
         </button>
       </div>
+
+      {historyEntries.length > 0 && (
+        <details className="mt-3 border-t border-border/60 pt-3">
+          <summary className="cursor-pointer text-xs font-medium text-text-secondary">
+            Historique ({historyEntries.length})
+          </summary>
+          <div className="mt-2">
+            <CalculationHistoryList
+              entries={historyEntries}
+              spotName={spot.name}
+              onDeleteEntry={onDeleteHistoryEntry}
+              onClearAll={() => onClearSpotHistory(spot)}
+            />
+          </div>
+        </details>
+      )}
     </article>
   )
 }

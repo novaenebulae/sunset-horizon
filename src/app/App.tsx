@@ -145,6 +145,8 @@ export function App() {
             />
             <SavedSpotsSection
               position={position}
+              observationDate={observationDate}
+              calculationSettings={calculationSettings}
               horizonState={horizon.state}
               horizonResult={horizon.result}
               lastAddressLabel={lastAddressLabel}

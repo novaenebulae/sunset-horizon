@@ -7,7 +7,7 @@ Objectifs v2 validés :
 3. Carte solaire annuelle.
 4. Recommandation du meilleur spot.
 5. Simulation visuelle du coucher.
-6. Ajout de la météo à la date sélectionnée
+6. Affichage de la météo à la date sélectionnée (15 jours max)
 
 Contraintes :
 

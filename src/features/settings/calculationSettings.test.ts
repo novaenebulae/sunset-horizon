@@ -48,7 +48,7 @@ describe('defaultCalculationSettings', () => {
     const balanced = CALCULATION_SETTINGS_PRESETS.balanced
     expect(balanced.maxDistanceM).toBe(DEFAULT_MAX_DISTANCE_M)
     expect(balanced.sampleStepM).toBe(DEFAULT_STEP_M)
-    expect(balanced.timeStepSeconds).toBe(30)
+    expect(balanced.timeStepSeconds).toBe(15)
     expect(balanced.refinementStepSeconds).toBe(15)
   })
 
@@ -62,11 +62,11 @@ describe('defaultCalculationSettings', () => {
     const settings = getPresetSettings('precise')
     expect(settingsToTerrainParams(settings)).toEqual({
       maxDistanceM: 30_000,
-      stepM: 100,
+      stepM: 50,
     })
     expect(settingsToHorizonOptions(settings)).toEqual({
       applyRefraction: true,
-      stepMs: 10_000,
+      stepMs: 1_000,
       refineStepMs: 5_000,
     })
   })

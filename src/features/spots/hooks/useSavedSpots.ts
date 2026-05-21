@@ -4,6 +4,7 @@ import type { SunsetResult } from '@/features/horizon/horizonTypes'
 import type { HorizonSunsetState } from '@/features/horizon/hooks/useHorizonSunset'
 import { spotComputedSnapshotFromResult } from '../spotComputedSnapshot'
 import { SpotStorageError, type SavedSpot } from '../spotTypes'
+import { clearHistoryForSpot } from '@/features/history/calculationHistoryStorage'
 import {
   buildDefaultSpotName,
   getSavedSpots,
@@ -108,6 +109,7 @@ export function useSavedSpots() {
 
       try {
         removeSpot(id)
+        clearHistoryForSpot(id)
         refreshSpots()
         setStatusMessage('Spot supprimé.')
         return true

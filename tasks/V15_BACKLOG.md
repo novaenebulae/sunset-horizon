@@ -43,31 +43,33 @@ Critères d’acceptation :
 
 Objectif : conserver localement les derniers calculs utiles pour un spot.
 
-- [ ] Créer `CalculationHistoryEntry`.
-- [ ] Associer un historique à un spot sauvegardé.
-- [ ] Enregistrer date d’observation.
-- [ ] Enregistrer heure officielle.
-- [ ] Enregistrer heure corrigée.
-- [ ] Enregistrer delta minutes.
-- [ ] Enregistrer azimut du coucher.
-- [ ] Enregistrer angle horizon.
-- [ ] Enregistrer distance du point bloquant.
-- [ ] Enregistrer source terrain.
-- [ ] Enregistrer warnings.
-- [ ] Enregistrer réglages utilisés.
-- [ ] Limiter le nombre d’entrées par spot.
-- [ ] Afficher les dernières entrées dans l’UI.
-- [ ] Ajouter suppression de l’historique d’un spot.
-- [ ] Ajouter tests de persistance.
+Statut : terminé.
+
+- [x] Créer `CalculationHistoryEntry`.
+- [x] Associer un historique à un spot sauvegardé.
+- [x] Enregistrer date d’observation.
+- [x] Enregistrer heure officielle.
+- [x] Enregistrer heure corrigée.
+- [x] Enregistrer delta minutes.
+- [x] Enregistrer azimut du coucher.
+- [x] Enregistrer angle horizon.
+- [x] Enregistrer distance du point bloquant.
+- [x] Enregistrer source terrain.
+- [x] Enregistrer warnings.
+- [x] Enregistrer réglages utilisés.
+- [x] Limiter le nombre d’entrées par spot.
+- [x] Afficher les dernières entrées dans l’UI.
+- [x] Ajouter suppression de l’historique d’un spot.
+- [x] Ajouter tests de persistance.
 
 Critères d’acceptation :
 
-- [ ] Un calcul réussi peut être rattaché à un spot.
-- [ ] Les historiques sont conservés après rechargement.
-- [ ] Les entrées anciennes sont limitées ou nettoyées.
-- [ ] Une corruption localStorage ne casse pas l’application.
-- [ ] `npm test` passe.
-- [ ] `npm run build` passe.
+- [x] Un calcul réussi peut être rattaché à un spot.
+- [x] Les historiques sont conservés après rechargement.
+- [x] Les entrées anciennes sont limitées ou nettoyées.
+- [x] Une corruption localStorage ne casse pas l’application.
+- [x] `npm test` passe.
+- [x] `npm run build` passe.
 
 ## Epic 3 — Cache local IndexedDB des profils terrain
 
