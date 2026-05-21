@@ -81,10 +81,16 @@ describe('validateCalculationSettings', () => {
       timeStepSeconds: 90,
       refinementStepSeconds: 45,
       refractionEnabled: false,
+      terrainDebugEnabled: true,
     })
     expect(result.precisionMode).toBe('fast')
     expect(result.maxDistanceM).toBe(12_000)
     expect(result.refractionEnabled).toBe(false)
+    expect(result.terrainDebugEnabled).toBe(true)
+  })
+
+  it('defaults terrainDebugEnabled to false', () => {
+    expect(validateCalculationSettings({}).terrainDebugEnabled).toBe(false)
   })
 
   it('falls back to balanced on invalid input', () => {

@@ -5,7 +5,11 @@ import {
   fetchProfileForSampledLine,
   getPointElevation,
   IGN_MAX_SAMPLING_PER_REQUEST,
+  IGN_NO_DATA_SEA_LEVEL_Z,
+  IGN_INVALID_ELEVATION_THRESHOLD_Z,
   IGN_NO_DATA_Z,
+  isNoDataElevation,
+  resolveProfileElevationEntries,
   resetIgnRequestThrottleForTests,
 } from './ignAltimetryClient'
 import { TerrainError } from './terrainErrors'
@@ -122,7 +126,107 @@ describe('ignAltimetryClient', () => {
     })
   })
 
-  it('truncates profile at first no-data point (coastal line into ocean)', async () => {
+  it('maps no-data to sea level when valid elevations follow (coast–sea–coast)', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          elevations: [
+            { lon: -4.408159, lat: 48.37577, z: 23.29 },
+            { lon: -4.409874675, lat: 48.376494365, z: 7.16 },
+            { lon: -4.420168725, lat: 48.380840555, z: IGN_NO_DATA_Z },
+            { lon: -4.4218844, lat: 48.38156492, z: IGN_NO_DATA_Z },
+            { lon: -4.423600075, lat: 48.382289285, z: IGN_NO_DATA_Z },
+            { lon: -4.44590385, lat: 48.39170603, z: 7 },
+            { lon: -4.447619525, lat: 48.392430395, z: 6.99 },
+          ],
+        }),
+      }),
+    )
+
+    const result = await fetchProfileAlongLine([-4.41, -4.45], [48.38, 48.39], 7)
+    expect(result).toHaveLength(7)
+    expect(result[0].z).toBeCloseTo(23.29)
+    expect(result[2].z).toBe(IGN_NO_DATA_SEA_LEVEL_Z)
+    expect(result[3].z).toBe(IGN_NO_DATA_SEA_LEVEL_Z)
+    expect(result[4].z).toBe(IGN_NO_DATA_SEA_LEVEL_Z)
+    expect(result[5].z).toBeCloseTo(7)
+    expect(result[6].z).toBeCloseTo(6.99)
+  })
+
+  it('treats IGN pseudo-invalid elevations below -300 m as no-data', () => {
+    expect(isNoDataElevation(IGN_NO_DATA_Z)).toBe(true)
+    expect(isNoDataElevation(-99998.99)).toBe(true)
+    expect(isNoDataElevation(-9952)).toBe(true)
+    expect(isNoDataElevation(-6503)).toBe(true)
+    expect(isNoDataElevation(-300)).toBe(true)
+    expect(isNoDataElevation(-299)).toBe(false)
+    expect(isNoDataElevation(-50)).toBe(false)
+    expect(isNoDataElevation(100)).toBe(false)
+  })
+
+  it('maps pseudo-invalid mid-profile values to sea level', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          elevations: [
+            { lon: 1, lat: 48, z: 15 },
+            { lon: 2, lat: 48, z: -9952 },
+            { lon: 3, lat: 48, z: -6503 },
+            { lon: 4, lat: 48, z: 12 },
+          ],
+        }),
+      }),
+    )
+
+    const result = await fetchProfileAlongLine([1, 4], [48, 48], 4)
+    expect(result).toHaveLength(4)
+    expect(result[1].z).toBe(IGN_NO_DATA_SEA_LEVEL_Z)
+    expect(result[2].z).toBe(IGN_NO_DATA_SEA_LEVEL_Z)
+    expect(result[3].z).toBeCloseTo(12)
+  })
+
+  it('throws OUT_OF_COVERAGE for point elevation below threshold', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({ elevations: [-6503] }),
+      }),
+    )
+
+    await expect(fetchPointElevations([2.35], [48.85])).rejects.toMatchObject({
+      code: 'OUT_OF_COVERAGE',
+    })
+  })
+
+  it('resolveProfileElevationEntries maps mid-profile gaps to 0 m', () => {
+    const resolved = resolveProfileElevationEntries([
+      { lon: 1, lat: 48, z: 10 },
+      { lon: 2, lat: 48, z: IGN_NO_DATA_Z },
+      { lon: 3, lat: 48, z: 20 },
+    ])
+    expect(resolved).toHaveLength(3)
+    expect(resolved[1].z).toBe(0)
+  })
+
+  it('resolveProfileElevationEntries truncates trailing no-data only', () => {
+    const resolved = resolveProfileElevationEntries([
+      { lon: 1, lat: 48, z: 10 },
+      { lon: 2, lat: 48, z: IGN_NO_DATA_Z },
+      { lon: 3, lat: 48, z: IGN_NO_DATA_Z },
+    ])
+    expect(resolved).toHaveLength(1)
+    expect(resolved[0].z).toBe(10)
+  })
+
+  it('truncates profile at first trailing no-data (coastal line into ocean)', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
@@ -144,7 +248,9 @@ describe('ignAltimetryClient', () => {
     const result = await fetchProfileAlongLine([-4.6, -4.63], [48.06, 48.08], 6)
     expect(result).toHaveLength(4)
     expect(result.at(-1)?.z).toBeCloseTo(25.94)
-    expect(result.every((p) => p.z > IGN_NO_DATA_Z)).toBe(true)
+    expect(
+      result.every((p) => p.z > IGN_INVALID_ELEVATION_THRESHOLD_Z),
+    ).toBe(true)
   })
 
   it('treats -99998.99 as no-data for point elevation', async () => {

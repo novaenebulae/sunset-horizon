@@ -40,6 +40,28 @@ function formatDistanceKm(distanceM: number): string {
   return `${(distanceM / 1000).toFixed(2)} km`
 }
 
+/** Domaine Y adapté au relief affiché (évite un axe depuis 0 m). */
+export function elevationAxisDomain(
+  elevationsM: number[],
+): [number, number] {
+  if (elevationsM.length === 0) {
+    return [0, 100]
+  }
+
+  let min = elevationsM[0]
+  let max = elevationsM[0]
+  for (const elevation of elevationsM) {
+    min = Math.min(min, elevation)
+    max = Math.max(max, elevation)
+  }
+
+  const range = max - min
+  const padding =
+    range > 0 ? Math.max(range * 0.08, 5) : Math.max(Math.abs(min) * 0.05, 10)
+
+  return [min - padding, max + padding]
+}
+
 type TooltipPayload = {
   payload?: ChartPoint
 }
@@ -104,6 +126,7 @@ export function HorizonProfileChart({
 
   const data = buildChartData(horizonProfile)
   const blocking = horizonProfile.blockingSample
+  const yDomain = elevationAxisDomain(data.map((point) => point.elevationM))
 
   return (
     <section
@@ -133,7 +156,10 @@ export function HorizonProfileChart({
               }}
             />
             <YAxis
+              domain={yDomain}
+              allowDataOverflow
               tick={{ fill: '#9CA3AF', fontSize: 11 }}
+              tickFormatter={(value) => `${Math.round(value)}`}
               label={{
                 value: 'Altitude (m)',
                 angle: -90,

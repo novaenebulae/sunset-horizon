@@ -12,10 +12,14 @@ export const IGN_ELEVATION_LINE_URL =
 
 export const DEFAULT_ALTI_RESOURCE = 'ign_rge_alti_wld'
 export const IGN_DELIMITER = '|'
+/** Valeur sentinelle documentée par l’API IGN pour l’absence de donnée. */
 export const IGN_NO_DATA_Z = -99999
 
-/** IGN may return -99999 or values such as -99998.99 for no-data cells. */
-const IGN_NO_DATA_THRESHOLD_Z = -99990
+/**
+ * Altitudes en dessous de ce seuil sont traitées comme invalides (no-data IGN,
+ * artefacts type -9952 / -6503, pas du relief réel en France métropolitaine).
+ */
+export const IGN_INVALID_ELEVATION_THRESHOLD_Z = -300
 
 /** IGN rate limit: 5 requests per second per IP (official doc). */
 export const IGN_MAX_REQUESTS_PER_SECOND = 5
@@ -50,7 +54,47 @@ type IgnRawResponse = {
 export type ProfileMode = 'simple' | 'accurate'
 
 export function isNoDataElevation(z: number): boolean {
-  return z <= IGN_NO_DATA_THRESHOLD_Z
+  return z <= IGN_INVALID_ELEVATION_THRESHOLD_Z
+}
+
+/** Altitude utilisée pour les cellules IGN sans donnée en mer (profil côtier). */
+export const IGN_NO_DATA_SEA_LEVEL_Z = 0
+
+function hasValidElevationAfter(
+  elevations: readonly { z: number }[],
+  fromIndex: number,
+): boolean {
+  for (let i = fromIndex + 1; i < elevations.length; i++) {
+    if (!isNoDataElevation(elevations[i].z)) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * Profil IGN : no-data au milieu (ex. mer) → z = 0 ; no-data en fin de ligne
+ * (profil qui s’enfonce dans l’océan) → troncature comme avant.
+ */
+export function resolveProfileElevationEntries(
+  entries: IgnElevationEntry[],
+): IgnElevationEntry[] {
+  const points: IgnElevationEntry[] = []
+
+  for (let i = 0; i < entries.length; i++) {
+    const entry = entries[i]
+    if (isNoDataElevation(entry.z)) {
+      if (hasValidElevationAfter(entries, i)) {
+        points.push({ ...entry, z: IGN_NO_DATA_SEA_LEVEL_Z })
+      } else {
+        break
+      }
+    } else {
+      points.push(entry)
+    }
+  }
+
+  return points
 }
 
 async function throttleRequests(): Promise<void> {
@@ -146,7 +190,7 @@ function parseProfileElevationResponse(data: IgnRawResponse): IgnElevationEntry[
     throw new TerrainError('EMPTY_RESPONSE', terrainErrorMessage('EMPTY_RESPONSE'))
   }
 
-  const points: IgnElevationEntry[] = []
+  const raw: IgnElevationEntry[] = []
 
   for (const entry of elevations) {
     if (typeof entry !== 'object' || entry === null) {
@@ -166,11 +210,10 @@ function parseProfileElevationResponse(data: IgnRawResponse): IgnElevationEntry[
       throw new TerrainError('API_ERROR', terrainErrorMessage('API_ERROR'))
     }
 
-    if (isNoDataElevation(z)) {
-      break
-    }
-    points.push({ lon, lat, z })
+    raw.push({ lon, lat, z })
   }
+
+  const points = resolveProfileElevationEntries(raw)
 
   if (points.length < 2) {
     throw new TerrainError('OUT_OF_COVERAGE', terrainErrorMessage('OUT_OF_COVERAGE'))

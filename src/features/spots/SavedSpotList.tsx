@@ -42,7 +42,10 @@ export function SavedSpotList({
           Aucun spot enregistré pour le moment.
         </p>
       ) : (
-        <ul className="space-y-3" aria-label="Liste des spots">
+        <ul
+          className="grid gap-3 lg:grid-cols-2"
+          aria-label="Liste des spots"
+        >
           {spots.map((spot) => (
             <li key={spot.id}>
               <SavedSpotCard

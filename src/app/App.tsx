@@ -24,7 +24,7 @@ import { todayAtLocalNoon } from '@/lib/time'
 export function App() {
   const [observationDate, setObservationDate] = useState(todayAtLocalNoon)
   const [terrainProvider, setTerrainProvider] =
-    useState<TerrainProviderId>('mock')
+    useState<TerrainProviderId>('ign')
   const [profileOverride, setProfileOverride] =
     useState<TerrainProfileResult | null>(null)
   const [lastAddressLabel, setLastAddressLabel] = useState<string | null>(null)
@@ -34,6 +34,7 @@ export function App() {
     error: settingsError,
     setPrecisionMode,
     setRefractionEnabled,
+    setTerrainDebugEnabled,
     resetSettings,
     dismissError: dismissSettingsError,
   } = useCalculationSettings()
@@ -70,6 +71,15 @@ export function App() {
     calculationSettings.refractionEnabled,
   ])
 
+  useEffect(() => {
+    if (!calculationSettings.terrainDebugEnabled && terrainProvider !== 'ign') {
+      setTerrainProvider('ign')
+    }
+  }, [calculationSettings.terrainDebugEnabled, terrainProvider])
+
+  const effectiveTerrainProvider: TerrainProviderId =
+    calculationSettings.terrainDebugEnabled ? terrainProvider : 'ign'
+
   const handleProfileLoaded = useCallback((profile: TerrainProfileResult) => {
     setProfileOverride(profile)
   }, [])
@@ -94,7 +104,7 @@ export function App() {
     observationDate,
     sunsetAzimuthDeg: solar.sunsetAzimuthDeg,
     calculationSettings,
-    provider: terrainProvider,
+    provider: effectiveTerrainProvider,
     profileOverride,
   })
 
@@ -106,17 +116,81 @@ export function App() {
     <AppShell>
       <Header />
       <main className="flex flex-1 flex-col gap-6">
-        <LocationToolbar
-          state={state}
-          hasPosition={position !== null}
-          isLoading={isLoading}
-          onRequestGps={requestGps}
-          onClearError={clearError}
-          onAddressSelect={handleAddressSelect}
-        />
+        {/* Desktop : localisation + date sur une ligne */}
+        <div className="hidden min-w-0 items-end gap-8 lg:flex">
+          <div className="min-w-0 flex-1">
+            <LocationToolbar
+              state={state}
+              hasPosition={position !== null}
+              isLoading={isLoading}
+              onRequestGps={requestGps}
+              onClearError={clearError}
+              onAddressSelect={handleAddressSelect}
+            />
+          </div>
+          <div className="shrink-0 border-l border-border pl-8">
+            <DateSelector
+              variant="toolbar"
+              value={observationDate}
+              onChange={setObservationDate}
+            />
+          </div>
+        </div>
 
-        <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(360px,0.65fr)]">
-          <div className="flex min-w-0 flex-col gap-4">
+        {/* Mobile : barre de localisation seule */}
+        <div className="lg:hidden">
+          <LocationToolbar
+            state={state}
+            hasPosition={position !== null}
+            isLoading={isLoading}
+            onRequestGps={requestGps}
+            onClearError={clearError}
+            onAddressSelect={handleAddressSelect}
+          />
+        </div>
+
+        <div className="flex min-w-0 flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)] lg:items-start lg:gap-x-6 lg:gap-y-4">
+          {/* Colonne droite desktop : position → résultats → réglages (gap serré) */}
+          <div className="max-lg:contents lg:col-start-2 lg:row-span-2 lg:flex lg:flex-col lg:gap-4 lg:self-start">
+            <div className="order-1">
+              <LocationControls position={position} />
+            </div>
+
+            <div className="order-4">
+              <SunsetResultCard
+                state={horizon.state}
+                result={horizon.result}
+                error={horizon.error}
+                hasPosition={position !== null}
+                solarError={solar.error}
+              />
+            </div>
+
+            <div className="order-8 flex flex-col gap-4">
+              <CalculationSettingsPanel
+                settings={calculationSettings}
+                storageAvailable={settingsStorageAvailable}
+                error={settingsError}
+                onPrecisionModeChange={setPrecisionMode}
+                onRefractionChange={setRefractionEnabled}
+                onTerrainDebugChange={setTerrainDebugEnabled}
+                onReset={resetSettings}
+                onDismissError={dismissSettingsError}
+              />
+              {calculationSettings.terrainDebugEnabled && (
+                <TerrainDebugPanel
+                  position={position}
+                  sunsetAzimuthDeg={solar.sunsetAzimuthDeg}
+                  provider={terrainProvider}
+                  calculationSettings={calculationSettings}
+                  onProviderChange={setTerrainProvider}
+                  onProfileLoaded={handleProfileLoaded}
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="order-2 min-w-0 lg:col-start-1 lg:row-start-1">
             <MapPanel
               position={position}
               onPositionChange={setManualPosition}
@@ -124,25 +198,23 @@ export function App() {
               profileSamples={profileSamples}
               blockingSample={blockingSample}
             />
-            <HorizonProfileChart
-              horizonProfile={horizonProfile}
-              state={horizon.state}
-            />
-            <LocationControls position={position} />
           </div>
 
-          <div className="flex min-w-0 flex-col gap-4">
+          <div className="order-3 lg:hidden">
             <DateSelector
               value={observationDate}
               onChange={setObservationDate}
             />
-            <SunsetResultCard
+          </div>
+
+          <div className="order-5 min-w-0 lg:col-start-1 lg:row-start-2">
+            <HorizonProfileChart
+              horizonProfile={horizonProfile}
               state={horizon.state}
-              result={horizon.result}
-              error={horizon.error}
-              hasPosition={position !== null}
-              solarError={solar.error}
             />
+          </div>
+
+          <div className="order-7 min-w-0 lg:col-span-2 lg:row-start-3">
             <SavedSpotsSection
               position={position}
               observationDate={observationDate}
@@ -151,23 +223,6 @@ export function App() {
               horizonResult={horizon.result}
               lastAddressLabel={lastAddressLabel}
               onLoadSpot={handleLoadSavedSpot}
-            />
-            <CalculationSettingsPanel
-              settings={calculationSettings}
-              storageAvailable={settingsStorageAvailable}
-              error={settingsError}
-              onPrecisionModeChange={setPrecisionMode}
-              onRefractionChange={setRefractionEnabled}
-              onReset={resetSettings}
-              onDismissError={dismissSettingsError}
-            />
-            <TerrainDebugPanel
-              position={position}
-              sunsetAzimuthDeg={solar.sunsetAzimuthDeg}
-              provider={terrainProvider}
-              calculationSettings={calculationSettings}
-              onProviderChange={setTerrainProvider}
-              onProfileLoaded={handleProfileLoaded}
             />
           </div>
         </div>

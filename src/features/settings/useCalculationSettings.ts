@@ -59,6 +59,13 @@ export function useCalculationSettings() {
     [persist, settings],
   )
 
+  const setTerrainDebugEnabled = useCallback(
+    (enabled: boolean) => {
+      persist({ ...settings, terrainDebugEnabled: enabled })
+    },
+    [persist, settings],
+  )
+
   const resetSettings = useCallback(() => {
     persist(getPresetSettings('balanced'))
   }, [persist])
@@ -71,6 +78,7 @@ export function useCalculationSettings() {
     error,
     setPrecisionMode,
     setRefractionEnabled,
+    setTerrainDebugEnabled,
     resetSettings,
     dismissError,
   }

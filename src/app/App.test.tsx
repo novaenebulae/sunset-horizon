@@ -33,11 +33,18 @@ describe('App', () => {
 
   it('affiche le sélecteur de date', () => {
     render(<App />)
-    expect(screen.getByLabelText(/date d'observation/i)).toBeInTheDocument()
+    expect(screen.getAllByLabelText(/date d'observation/i).length).toBeGreaterThan(
+      0,
+    )
+  })
+
+  it('masque le diagnostic terrain par défaut', () => {
+    render(<App />)
+    expect(screen.queryByTestId('terrain-debug-panel')).not.toBeInTheDocument()
   })
 
   it('affiche les contrôles de position en tête de page', () => {
     render(<App />)
-    expect(screen.getByTestId('location-toolbar')).toBeInTheDocument()
+    expect(screen.getAllByTestId('location-toolbar').length).toBeGreaterThan(0)
   })
 })

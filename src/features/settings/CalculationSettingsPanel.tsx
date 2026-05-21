@@ -7,6 +7,7 @@ type CalculationSettingsPanelProps = {
   error: string | null
   onPrecisionModeChange: (mode: PrecisionMode) => void
   onRefractionChange: (enabled: boolean) => void
+  onTerrainDebugChange: (enabled: boolean) => void
   onReset: () => void
   onDismissError?: () => void
 }
@@ -27,6 +28,7 @@ export function CalculationSettingsPanel({
   error,
   onPrecisionModeChange,
   onRefractionChange,
+  onTerrainDebugChange,
   onReset,
   onDismissError,
 }: CalculationSettingsPanelProps) {
@@ -99,6 +101,16 @@ export function CalculationSettingsPanel({
             className="h-4 w-4 rounded border-border accent-accent-sun"
           />
           Appliquer la correction de réfraction atmosphérique
+        </label>
+
+        <label className="flex cursor-pointer items-center gap-2 text-sm text-text-secondary">
+          <input
+            type="checkbox"
+            checked={settings.terrainDebugEnabled}
+            onChange={(event) => onTerrainDebugChange(event.target.checked)}
+            className="h-4 w-4 rounded border-border accent-accent-sun"
+          />
+          Afficher le diagnostic terrain (mode debug)
         </label>
 
         {settings.precisionMode === 'precise' && (

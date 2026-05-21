@@ -101,6 +101,10 @@ export function validateCalculationSettings(
     input.refractionEnabled,
     preset.refractionEnabled,
   )
+  const terrainDebugEnabled = parseBoolean(
+    input.terrainDebugEnabled,
+    false,
+  )
 
   return {
     precisionMode: mode,
@@ -109,5 +113,6 @@ export function validateCalculationSettings(
     timeStepSeconds,
     refinementStepSeconds,
     refractionEnabled,
+    terrainDebugEnabled,
   }
 }

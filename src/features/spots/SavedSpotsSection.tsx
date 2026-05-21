@@ -136,6 +136,18 @@ export function SavedSpotsSection({
     clearSpotHistory(spot.id)
   }
 
+  useEffect(() => {
+    if (!spotsStatus) return
+    const timer = window.setTimeout(dismissSpotsStatus, 4000)
+    return () => window.clearTimeout(timer)
+  }, [spotsStatus, dismissSpotsStatus])
+
+  useEffect(() => {
+    if (!historyStatus) return
+    const timer = window.setTimeout(dismissHistoryStatus, 4000)
+    return () => window.clearTimeout(timer)
+  }, [historyStatus, dismissHistoryStatus])
+
   return (
     <details
       className="group rounded-xl border border-border bg-surface"
@@ -146,40 +158,69 @@ export function SavedSpotsSection({
       }}
     >
       <summary className="cursor-pointer list-none px-6 py-4 marker:content-none [&::-webkit-details-marker]:hidden lg:cursor-default lg:pointer-events-none">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-text-secondary">
-            Spots sauvegardés
-          </h2>
-          <span
-            className="text-xs text-text-secondary lg:hidden"
-            aria-hidden
-          >
-            {spots.length > 0 ? `${spots.length}` : '—'}
-          </span>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-text-secondary">
+              Spots sauvegardés
+            </h2>
+            <span
+              className="text-xs text-text-secondary lg:hidden"
+              aria-hidden
+            >
+              {spots.length > 0 ? `${spots.length}` : '—'}
+            </span>
+          </div>
+          {position && !showForm && (
+            <button
+              type="button"
+              disabled={!spotsStorageAvailable}
+              onClick={(event) => {
+                event.preventDefault()
+                setShowForm(true)
+              }}
+              className="pointer-events-auto hidden shrink-0 rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-primary transition-colors hover:bg-bg disabled:cursor-not-allowed disabled:opacity-50 lg:inline-flex"
+            >
+              Enregistrer ce spot
+            </button>
+          )}
         </div>
       </summary>
 
-      <div className="space-y-4 border-t border-border px-6 pb-6 pt-4">
+      <div className="space-y-4 border-t border-border px-6 pb-6 pt-4 lg:px-8">
         {!spotsStorageAvailable && (
           <WarningBanner message="Le stockage local du navigateur est indisponible. Les spots ne peuvent pas être enregistrés." />
         )}
 
         {spotsStatus && (
-          <p
+          <div
             role="status"
             className="rounded-lg border border-accent-horizon/30 bg-accent-horizon/10 px-4 py-3 text-sm text-accent-horizon"
           >
-            {spotsStatus}
-          </p>
+            <p>{spotsStatus}</p>
+            <button
+              type="button"
+              onClick={dismissSpotsStatus}
+              className="mt-2 text-xs font-medium underline hover:no-underline"
+            >
+              Fermer
+            </button>
+          </div>
         )}
 
         {historyStatus && (
-          <p
+          <div
             role="status"
             className="rounded-lg border border-accent-horizon/30 bg-accent-horizon/10 px-4 py-3 text-sm text-accent-horizon"
           >
-            {historyStatus}
-          </p>
+            <p>{historyStatus}</p>
+            <button
+              type="button"
+              onClick={dismissHistoryStatus}
+              className="mt-2 text-xs font-medium underline hover:no-underline"
+            >
+              Fermer
+            </button>
+          </div>
         )}
 
         {historyError && (
@@ -193,29 +234,36 @@ export function SavedSpotsSection({
           <p className="text-sm text-text-secondary">
             Choisissez un point d&apos;observation pour enregistrer un spot.
           </p>
+        ) : showForm ? (
+          <SavedSpotForm
+            defaultName={defaultSpotName}
+            onSave={handleSave}
+            onCancel={() => setShowForm(false)}
+          />
         ) : (
-          <>
-            {!showForm ? (
-              <button
-                type="button"
-                disabled={!spotsStorageAvailable}
-                onClick={() => setShowForm(true)}
-                className="w-full rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-bg disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
-              >
-                Enregistrer ce spot
-              </button>
-            ) : (
-              <SavedSpotForm
-                defaultName={defaultSpotName}
-                onSave={handleSave}
-                onCancel={() => setShowForm(false)}
-              />
-            )}
-          </>
+          <button
+            type="button"
+            disabled={!spotsStorageAvailable}
+            onClick={() => setShowForm(true)}
+            className="w-full rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-bg disabled:cursor-not-allowed disabled:opacity-50 lg:hidden"
+          >
+            Enregistrer ce spot
+          </button>
         )}
 
+        <SavedSpotList
+          spots={spots}
+          error={spotsError}
+          onDismissError={dismissSpotsError}
+          getHistoryForSpot={getEntriesForSpot}
+          onLoad={handleLoad}
+          onDelete={handleDeleteSpot}
+          onDeleteHistoryEntry={(entry) => deleteEntry(entry.id)}
+          onClearSpotHistory={handleClearSpotHistory}
+        />
+
         {horizonState === 'success' && horizonResult?.terrainSunset && (
-          <div className="space-y-2 rounded-lg border border-border/80 bg-bg/30 p-4">
+          <div className="space-y-2 rounded-lg border border-border/80 bg-bg/30 p-4 lg:p-5">
             <p className="text-xs font-medium text-text-primary">
               Historique des calculs
             </p>
@@ -224,8 +272,8 @@ export function SavedSpotsSection({
                 Enregistrez d&apos;abord un spot pour y associer ce résultat.
               </p>
             ) : (
-              <>
-                <label className="block text-xs text-text-secondary">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:gap-4">
+                <label className="block min-w-0 flex-1 text-xs text-text-secondary">
                   <span className="mb-1 block font-medium">Spot cible</span>
                   <select
                     value={historySpotId}
@@ -244,25 +292,14 @@ export function SavedSpotsSection({
                   type="button"
                   disabled={!canSaveToHistory}
                   onClick={handleSaveToHistory}
-                  className="w-full rounded-lg border border-accent-horizon/50 px-4 py-2 text-sm font-medium text-accent-horizon transition-colors hover:bg-accent-horizon/10 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                  className="w-full shrink-0 rounded-lg border border-accent-horizon/50 px-4 py-2 text-sm font-medium text-accent-horizon transition-colors hover:bg-accent-horizon/10 disabled:cursor-not-allowed disabled:opacity-50 lg:w-auto"
                 >
                   Enregistrer ce résultat dans l&apos;historique
                 </button>
-              </>
+              </div>
             )}
           </div>
         )}
-
-        <SavedSpotList
-          spots={spots}
-          error={spotsError}
-          onDismissError={dismissSpotsError}
-          getHistoryForSpot={getEntriesForSpot}
-          onLoad={handleLoad}
-          onDelete={handleDeleteSpot}
-          onDeleteHistoryEntry={(entry) => deleteEntry(entry.id)}
-          onClearSpotHistory={handleClearSpotHistory}
-        />
       </div>
     </details>
   )
