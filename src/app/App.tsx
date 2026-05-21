@@ -13,6 +13,10 @@ import { SunsetResultCard, HorizonProfileChart } from '@/features/results'
 import { useHorizonSunset } from '@/features/horizon'
 import { useSolarData } from '@/features/solar'
 import { SavedSpotsSection } from '@/features/spots'
+import {
+  CalculationSettingsPanel,
+  useCalculationSettings,
+} from '@/features/settings'
 import { TerrainDebugPanel } from '@/features/terrain'
 import type { TerrainProfileResult, TerrainProviderId } from '@/features/terrain'
 import { todayAtLocalNoon } from '@/lib/time'
@@ -24,6 +28,15 @@ export function App() {
   const [profileOverride, setProfileOverride] =
     useState<TerrainProfileResult | null>(null)
   const [lastAddressLabel, setLastAddressLabel] = useState<string | null>(null)
+  const {
+    settings: calculationSettings,
+    storageAvailable: settingsStorageAvailable,
+    error: settingsError,
+    setPrecisionMode,
+    setRefractionEnabled,
+    resetSettings,
+    dismissError: dismissSettingsError,
+  } = useCalculationSettings()
 
   const {
     state,
@@ -38,7 +51,7 @@ export function App() {
   const solar = useSolarData({
     position,
     observationDate,
-    applyRefraction: true,
+    applyRefraction: calculationSettings.refractionEnabled,
   })
 
   useEffect(() => {
@@ -49,6 +62,12 @@ export function App() {
     observationDate.getTime(),
     solar.sunsetAzimuthDeg,
     terrainProvider,
+    calculationSettings.precisionMode,
+    calculationSettings.maxDistanceM,
+    calculationSettings.sampleStepM,
+    calculationSettings.timeStepSeconds,
+    calculationSettings.refinementStepSeconds,
+    calculationSettings.refractionEnabled,
   ])
 
   const handleProfileLoaded = useCallback((profile: TerrainProfileResult) => {
@@ -74,7 +93,7 @@ export function App() {
     position,
     observationDate,
     sunsetAzimuthDeg: solar.sunsetAzimuthDeg,
-    applyRefraction: true,
+    calculationSettings,
     provider: terrainProvider,
     profileOverride,
   })
@@ -131,10 +150,20 @@ export function App() {
               lastAddressLabel={lastAddressLabel}
               onLoadSpot={handleLoadSavedSpot}
             />
+            <CalculationSettingsPanel
+              settings={calculationSettings}
+              storageAvailable={settingsStorageAvailable}
+              error={settingsError}
+              onPrecisionModeChange={setPrecisionMode}
+              onRefractionChange={setRefractionEnabled}
+              onReset={resetSettings}
+              onDismissError={dismissSettingsError}
+            />
             <TerrainDebugPanel
               position={position}
               sunsetAzimuthDeg={solar.sunsetAzimuthDeg}
               provider={terrainProvider}
+              calculationSettings={calculationSettings}
               onProviderChange={setTerrainProvider}
               onProfileLoaded={handleProfileLoaded}
             />

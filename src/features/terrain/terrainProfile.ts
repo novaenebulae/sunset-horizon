@@ -2,7 +2,7 @@ import { destinationPoint, haversineDistanceM } from '@/lib/geo'
 import type { LatLon } from '@/lib/geo'
 import {
   fetchPointElevations,
-  fetchProfileAlongLine,
+  fetchProfileForSampledLine,
 } from './ignAltimetryClient'
 import {
   buildMockTerrainProfile,
@@ -15,11 +15,7 @@ import type {
   TerrainProfileResult,
   TerrainProviderId,
 } from './terrainTypes'
-import {
-  DEFAULT_MAX_DISTANCE_M,
-  DEFAULT_STEP_M,
-  MAX_PROFILE_POINTS,
-} from './terrainTypes'
+import { DEFAULT_MAX_DISTANCE_M, DEFAULT_STEP_M } from './terrainTypes'
 
 export function buildSampledLine(
   observer: LatLon,
@@ -32,13 +28,6 @@ export function buildSampledLine(
     points.push(destinationPoint(observer, azimuthDeg, distanceM))
   }
   return points
-}
-
-function lineEndpoints(line: LatLon[]): { start: LatLon; end: LatLon } {
-  if (line.length < 2) {
-    throw toTerrainError(new Error('La ligne de profil doit contenir au moins 2 points.'))
-  }
-  return { start: line[0], end: line[line.length - 1] }
 }
 
 export async function getObserverElevation(
@@ -83,17 +72,7 @@ export async function fetchTerrainProfile(
       'ign',
     )
     const line = buildSampledLine(observer, azimuthDeg, maxDistanceM, stepM)
-    const { start, end } = lineEndpoints(line)
-    const sampling = Math.min(
-      MAX_PROFILE_POINTS,
-      Math.max(2, line.length),
-    )
-
-    const entries = await fetchProfileAlongLine(
-      [start.lon, end.lon],
-      [start.lat, end.lat],
-      sampling,
-    )
+    const entries = await fetchProfileForSampledLine(line)
 
     const points = entries.map((entry) => ({
       lat: entry.lat,

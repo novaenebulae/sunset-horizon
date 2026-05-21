@@ -2,7 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   fetchPointElevations,
   fetchProfileAlongLine,
+  fetchProfileForSampledLine,
   getPointElevation,
+  IGN_MAX_SAMPLING_PER_REQUEST,
   IGN_NO_DATA_Z,
   resetIgnRequestThrottleForTests,
 } from './ignAltimetryClient'
@@ -189,5 +191,47 @@ describe('ignAltimetryClient', () => {
     ).rejects.toMatchObject({
       code: 'API_ERROR',
     })
+  })
+
+  it('caps single-request sampling at IGN maximum (5000)', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => PROFILE_FIXTURE,
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    await fetchProfileAlongLine([2.35, 2.4], [48.85, 48.9], 9000)
+
+    const url = fetchMock.mock.calls[0][0] as string
+    expect(url).toContain(`sampling=${IGN_MAX_SAMPLING_PER_REQUEST}`)
+  })
+
+  it('splits long sampled lines into multiple API requests', async () => {
+    let callIndex = 0
+    const fetchMock = vi.fn().mockImplementation(async () => {
+      callIndex += 1
+      const count = callIndex === 1 ? 5000 : 500
+      const elevations = Array.from({ length: count }, (_, i) => ({
+        lon: 2.35 + i * 0.0001,
+        lat: 48.85 + i * 0.0001,
+        z: 100 + i,
+      }))
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ elevations }),
+      }
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const line = Array.from({ length: 5500 }, (_, i) => ({
+      lat: 48.85 + i * 0.00001,
+      lon: 2.35 + i * 0.00001,
+    }))
+
+    const result = await fetchProfileForSampledLine(line)
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+    expect(result.length).toBeGreaterThan(5000)
   })
 })

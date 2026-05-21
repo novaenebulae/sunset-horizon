@@ -39,6 +39,7 @@ export type CrossingBracket = {
 
 export type HorizonEngineOptions = {
   applyRefraction?: boolean
+  stepMs?: number
   refineStepMs?: number
 }
 

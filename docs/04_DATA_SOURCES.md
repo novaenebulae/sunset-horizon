@@ -13,7 +13,13 @@ Documentation :
 - https://data.geopf.fr/altimetrie/resources
 - https://geoplateforme.pages.gpf-tech.ign.fr/altimetrie/api-rest-calcul-altimetrique/
 
-Limite connue : 5 requêtes par seconde depuis une même IP.
+Limites connues (API REST altimétrie Géoplateforme) :
+
+- 5 requêtes par seconde depuis une même IP ;
+- profil `elevationLine.json` : paramètre `sampling` entre 2 et **5 000** points par requête ;
+- altitude multi-points `elevation.json` : jusqu’à **5 000** coordonnées par requête.
+
+Référence : [Service calcul altimétrique IGN](https://geoservices.ign.fr/node/1439).
 
 ## Stratégie API
 
@@ -29,8 +35,8 @@ Limite connue : 5 requêtes par seconde depuis une même IP.
 Distance minimale : 50 m
 Distance maximale : 30 km par défaut
 Distance maximale avancée : 80 km
-Pas initial : 100 m
-Pas précis : 25 à 50 m si API et performance OK
+Pas initial (mode normal) : 250 m
+Pas précis : 100 m (jusqu’à 5 000 points IGN par requête ; profils plus denses découpés en segments)
 ```
 
 ## LiDAR HD IGN

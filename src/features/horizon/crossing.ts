@@ -58,8 +58,7 @@ function findCrossingBackward(
   horizonAngleDeg: number,
   options: HorizonEngineOptions,
 ): Date | null {
-  const { applyRefraction = true } = options
-  const stepMs = DEFAULT_SAMPLE_STEP_MS
+  const { applyRefraction = true, stepMs = DEFAULT_SAMPLE_STEP_MS } = options
   let firstBelow = windowStart
 
   for (
@@ -93,8 +92,7 @@ function findCrossingForward(
   horizonAngleDeg: number,
   options: HorizonEngineOptions,
 ): Date | null {
-  const { applyRefraction = true } = options
-  const stepMs = DEFAULT_SAMPLE_STEP_MS
+  const { applyRefraction = true, stepMs = DEFAULT_SAMPLE_STEP_MS } = options
   let lastAbove = windowEnd
 
   for (

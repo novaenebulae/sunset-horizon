@@ -32,5 +32,8 @@ export type FetchTerrainProfileParams = {
 }
 
 export const DEFAULT_MAX_DISTANCE_M = 30_000
-export const DEFAULT_STEP_M = 500
-export const MAX_PROFILE_POINTS = 60
+/** Default terrain step for Normal/balanced preset (150 m). */
+export const DEFAULT_STEP_M = 150
+
+/** @deprecated Use IGN_MAX_SAMPLING_PER_REQUEST from ignAltimetryClient. */
+export const MAX_PROFILE_POINTS = 5000

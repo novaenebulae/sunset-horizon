@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { ObserverPosition } from '@/features/map/types'
+import type { CalculationSettings } from '@/features/settings/calculationSettingsTypes'
+import { settingsToTerrainParams } from '@/features/settings/defaultCalculationSettings'
 import { fetchTerrainProfile, getObserverElevation } from '../terrainProfile'
 import { toTerrainError } from '../terrainErrors'
 import type {
@@ -14,6 +16,7 @@ type UseTerrainDebugParams = {
   position: ObserverPosition | null
   sunsetAzimuthDeg: number | null
   provider: TerrainProviderId
+  calculationSettings: CalculationSettings
   onProviderChange: (provider: TerrainProviderId) => void
   onProfileLoaded?: (profile: TerrainProfileResult) => void
 }
@@ -22,9 +25,11 @@ export function useTerrainDebug({
   position,
   sunsetAzimuthDeg,
   provider,
+  calculationSettings,
   onProviderChange,
   onProfileLoaded,
 }: UseTerrainDebugParams) {
+  const terrainParams = settingsToTerrainParams(calculationSettings)
   const [observerElevation, setObserverElevation] =
     useState<ObserverElevationResult | null>(null)
   const [profile, setProfile] = useState<TerrainProfileResult | null>(null)
@@ -75,6 +80,7 @@ export function useTerrainDebug({
         observer: { lat: position.lat, lon: position.lon },
         azimuthDeg,
         provider,
+        ...terrainParams,
       })
       setProfile(result)
       onProfileLoaded?.(result)
@@ -91,7 +97,15 @@ export function useTerrainDebug({
     } finally {
       setIsLoadingProfile(false)
     }
-  }, [position?.lat, position?.lon, azimuthDeg, provider, onProfileLoaded])
+  }, [
+    position?.lat,
+    position?.lon,
+    azimuthDeg,
+    provider,
+    calculationSettings.maxDistanceM,
+    calculationSettings.sampleStepM,
+    onProfileLoaded,
+  ])
 
   const clearError = useCallback(() => setError(null), [])
 

@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ObserverPosition } from '@/features/map/types'
+import type { CalculationSettings } from '@/features/settings/calculationSettingsTypes'
+import {
+  settingsToHorizonOptions,
+  settingsToTerrainParams,
+} from '@/features/settings/defaultCalculationSettings'
 import { fetchTerrainProfile } from '@/features/terrain/terrainProfile'
 import { toTerrainError } from '@/features/terrain/terrainErrors'
 import type {
@@ -28,7 +33,7 @@ type UseHorizonSunsetParams = {
   position: ObserverPosition | null
   observationDate: Date
   sunsetAzimuthDeg: number | null
-  applyRefraction?: boolean
+  calculationSettings: CalculationSettings
   provider?: TerrainProviderId
   profileOverride?: TerrainProfileResult | null
   debounceMs?: number
@@ -62,11 +67,13 @@ export function useHorizonSunset({
   position,
   observationDate,
   sunsetAzimuthDeg,
-  applyRefraction = true,
+  calculationSettings,
   provider = 'mock',
   profileOverride = null,
   debounceMs = DEFAULT_DEBOUNCE_MS,
 }: UseHorizonSunsetParams): UseHorizonSunsetResult {
+  const horizonOptions = settingsToHorizonOptions(calculationSettings)
+  const terrainParams = settingsToTerrainParams(calculationSettings)
   const [state, setState] = useState<HorizonSunsetState>('idle')
   const [result, setResult] = useState<SunsetResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -106,6 +113,7 @@ export function useHorizonSunset({
               observer: { lat: position.lat, lon: position.lon },
               azimuthDeg,
               provider,
+              ...terrainParams,
             })
           }
 
@@ -123,7 +131,7 @@ export function useHorizonSunset({
             lon: position.lon,
             date: observationDate,
             profile,
-            options: { applyRefraction },
+            options: horizonOptions,
           })
 
           if (requestId !== requestIdRef.current) return
@@ -147,7 +155,12 @@ export function useHorizonSunset({
     position?.lon,
     observationDate.getTime(),
     sunsetAzimuthDeg,
-    applyRefraction,
+    calculationSettings.precisionMode,
+    calculationSettings.maxDistanceM,
+    calculationSettings.sampleStepM,
+    calculationSettings.timeStepSeconds,
+    calculationSettings.refinementStepSeconds,
+    calculationSettings.refractionEnabled,
     provider,
     profileOverride,
     debounceMs,

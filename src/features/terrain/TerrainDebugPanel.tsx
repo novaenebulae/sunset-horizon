@@ -2,12 +2,14 @@ import { AccuracyBadge } from '@/components/AccuracyBadge'
 import { WarningBanner } from '@/components/WarningBanner'
 import type { ObserverPosition } from '@/features/map/types'
 import { useTerrainDebug } from './hooks/useTerrainDebug'
+import type { CalculationSettings } from '@/features/settings/calculationSettingsTypes'
 import type { TerrainProviderId } from './terrainTypes'
 
 type TerrainDebugPanelProps = {
   position: ObserverPosition | null
   sunsetAzimuthDeg: number | null
   provider: TerrainProviderId
+  calculationSettings: CalculationSettings
   onProviderChange: (provider: TerrainProviderId) => void
   onProfileLoaded?: (profile: import('./terrainTypes').TerrainProfileResult) => void
 }
@@ -24,6 +26,7 @@ export function TerrainDebugPanel({
   position,
   sunsetAzimuthDeg,
   provider,
+  calculationSettings,
   onProviderChange,
   onProfileLoaded,
 }: TerrainDebugPanelProps) {
@@ -43,6 +46,7 @@ export function TerrainDebugPanel({
     position,
     sunsetAzimuthDeg,
     provider,
+    calculationSettings,
     onProviderChange,
     onProfileLoaded,
   })

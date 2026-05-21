@@ -6,9 +6,13 @@ export {
 export {
   fetchPointElevations,
   fetchProfileAlongLine,
+  fetchProfileForSampledLine,
   getPointElevation,
   getElevationProfile,
   isNoDataElevation,
+  IGN_MAX_SAMPLING_PER_REQUEST,
+  IGN_MIN_REQUEST_INTERVAL_MS,
+  IGN_MAX_REQUESTS_PER_SECOND,
   IGN_NO_DATA_Z,
   DEFAULT_ALTI_RESOURCE,
   IGN_ELEVATION_LINE_URL,
