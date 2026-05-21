@@ -7,6 +7,9 @@ import type { TerrainProviderId } from './terrainTypes'
 type TerrainDebugPanelProps = {
   position: ObserverPosition | null
   sunsetAzimuthDeg: number | null
+  provider: TerrainProviderId
+  onProviderChange: (provider: TerrainProviderId) => void
+  onProfileLoaded?: (profile: import('./terrainTypes').TerrainProfileResult) => void
 }
 
 function formatDistanceKm(distanceM: number): string {
@@ -20,9 +23,12 @@ function formatCoord(value: number): string {
 export function TerrainDebugPanel({
   position,
   sunsetAzimuthDeg,
+  provider,
+  onProviderChange,
+  onProfileLoaded,
 }: TerrainDebugPanelProps) {
   const {
-    provider,
+    provider: activeProvider,
     setProvider,
     observerElevation,
     profile,
@@ -33,10 +39,16 @@ export function TerrainDebugPanel({
     clearError,
     loadProfile,
     hasPosition,
-  } = useTerrainDebug({ position, sunsetAzimuthDeg })
+  } = useTerrainDebug({
+    position,
+    sunsetAzimuthDeg,
+    provider,
+    onProviderChange,
+    onProfileLoaded,
+  })
 
   const sourceBadge =
-    provider === 'mock'
+    activeProvider === 'mock'
       ? { label: 'Mode mock', variant: 'mock' as const }
       : { label: 'IGN Géoplateforme', variant: 'ign' as const }
 
@@ -66,7 +78,7 @@ export function TerrainDebugPanel({
                   type="radio"
                   name="terrain-provider"
                   value={value}
-                  checked={provider === value}
+                  checked={activeProvider === value}
                   onChange={() => setProvider(value)}
                   className="accent-accent-sun"
                 />
@@ -122,7 +134,7 @@ export function TerrainDebugPanel({
             >
               {isLoadingProfile
                 ? 'Chargement du profil…'
-                : provider === 'mock'
+                : activeProvider === 'mock'
                   ? 'Charger profil terrain (mock)'
                   : 'Charger profil terrain (IGN)'}
             </button>

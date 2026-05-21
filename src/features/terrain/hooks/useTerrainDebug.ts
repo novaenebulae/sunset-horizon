@@ -13,13 +13,18 @@ const DEFAULT_AZIMUTH_DEG = 270
 type UseTerrainDebugParams = {
   position: ObserverPosition | null
   sunsetAzimuthDeg: number | null
+  provider: TerrainProviderId
+  onProviderChange: (provider: TerrainProviderId) => void
+  onProfileLoaded?: (profile: TerrainProfileResult) => void
 }
 
 export function useTerrainDebug({
   position,
   sunsetAzimuthDeg,
+  provider,
+  onProviderChange,
+  onProfileLoaded,
 }: UseTerrainDebugParams) {
-  const [provider, setProvider] = useState<TerrainProviderId>('mock')
   const [observerElevation, setObserverElevation] =
     useState<ObserverElevationResult | null>(null)
   const [profile, setProfile] = useState<TerrainProfileResult | null>(null)
@@ -72,6 +77,7 @@ export function useTerrainDebug({
         provider,
       })
       setProfile(result)
+      onProfileLoaded?.(result)
       if (result.observer.elevationM !== undefined) {
         setObserverElevation({
           elevationM: result.observer.elevationM,
@@ -85,13 +91,13 @@ export function useTerrainDebug({
     } finally {
       setIsLoadingProfile(false)
     }
-  }, [position?.lat, position?.lon, azimuthDeg, provider])
+  }, [position?.lat, position?.lon, azimuthDeg, provider, onProfileLoaded])
 
   const clearError = useCallback(() => setError(null), [])
 
   return {
     provider,
-    setProvider,
+    setProvider: onProviderChange,
     observerElevation,
     profile,
     azimuthDeg,

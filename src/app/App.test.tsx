@@ -30,10 +30,10 @@ describe('App', () => {
     expect(screen.getByLabelText(/date d'observation/i)).toBeInTheDocument()
   })
 
-  it('affiche le message initial pour le coucher officiel', () => {
+  it('affiche le message initial pour le coucher corrigé', () => {
     render(<App />)
     expect(
-      screen.getByText(/sélectionne un point pour voir le coucher officiel/i),
+      screen.getByText(/choisis un point ou utilise ta position actuelle/i),
     ).toBeInTheDocument()
   })
 })
