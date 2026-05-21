@@ -44,6 +44,9 @@ export type HorizonEngineOptions = {
 
 export const DEFAULT_REFINE_STEP_MS = 10_000
 
+/** Minimum distance for blocking-sample selection (doc: sample from 50 m). */
+export const MIN_BLOCKING_DISTANCE_M = 50
+
 export type ComputeCorrectedSunsetParams = {
   lat: number
   lon: number

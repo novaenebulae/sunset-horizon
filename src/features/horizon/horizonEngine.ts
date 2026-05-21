@@ -4,6 +4,7 @@ import type {
   TerrainProfileResult,
 } from '@/features/terrain/terrainTypes'
 import type { HorizonProfile, TerrainSample } from './horizonTypes'
+import { MIN_BLOCKING_DISTANCE_M } from './horizonTypes'
 
 export function computeApparentAngleDeg(
   observerElevM: number,
@@ -38,10 +39,16 @@ export function buildTerrainSamples(
   }))
 }
 
+export function hasBlockingCandidates(samples: TerrainSample[]): boolean {
+  return samples.some((s) => s.distanceM >= MIN_BLOCKING_DISTANCE_M)
+}
+
 export function findBlockingSample(
   samples: TerrainSample[],
 ): TerrainSample | null {
-  const candidates = samples.filter((s) => s.distanceM > 0)
+  const candidates = samples.filter(
+    (s) => s.distanceM >= MIN_BLOCKING_DISTANCE_M,
+  )
   if (candidates.length === 0) {
     return null
   }

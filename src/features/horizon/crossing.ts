@@ -11,6 +11,7 @@ import type { SunsetSample } from '@/features/solar/types'
 import {
   buildHorizonProfile,
   estimateUncertaintyMinutes,
+  hasBlockingCandidates,
 } from './horizonEngine'
 import type {
   ComputeCorrectedSunsetParams,
@@ -233,7 +234,7 @@ export function computeCorrectedSunset(
   const sunsetAzimuthDeg = getSunsetAzimuthDeg(lat, lon, date, options)
   const warnings: string[] = []
 
-  if (horizonProfile.samples.filter((s) => s.distanceM > 0).length === 0) {
+  if (!hasBlockingCandidates(horizonProfile.samples)) {
     warnings.push('Profil terrain insuffisant pour calculer l\'horizon effectif.')
     return {
       officialSunset,

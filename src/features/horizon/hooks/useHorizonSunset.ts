@@ -88,6 +88,7 @@ export function useHorizonSunset({
     }
 
     setState('loading')
+    setResult(null)
     setError(null)
 
     const requestId = ++requestIdRef.current

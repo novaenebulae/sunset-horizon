@@ -5,6 +5,7 @@ import {
   buildTerrainSamples,
   computeApparentAngleDeg,
   findBlockingSample,
+  hasBlockingCandidates,
 } from './horizonEngine'
 
 const OBSERVER = { lat: 48.8566, lon: 2.3522, elevationM: 400 }
@@ -60,6 +61,20 @@ describe('horizonEngine', () => {
     const horizon = buildHorizonProfile(profile)
     expect(horizon.horizonAngleDeg).toBe(horizon.blockingSample?.apparentAngleDeg)
     expect(horizon.horizonAngleDeg).toBeGreaterThan(0)
+  })
+
+  it('ignores near-observer spikes when selecting blocking sample', () => {
+    const profile = syntheticProfile([
+      { distanceM: 0, elevationM: 400 },
+      { distanceM: 5, elevationM: 900 },
+      { distanceM: 8000, elevationM: 750 },
+    ])
+
+    const samples = buildTerrainSamples(profile)
+    const blocking = findBlockingSample(samples)
+
+    expect(blocking?.distanceM).toBe(8000)
+    expect(hasBlockingCandidates(samples)).toBe(true)
   })
 
   it('returns zero horizon angle when profile has only observer point', () => {
