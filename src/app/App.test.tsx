@@ -6,6 +6,12 @@ vi.mock('@/features/map/MapPanel', () => ({
   MapPanel: () => <div data-testid="map-panel">Carte (mock)</div>,
 }))
 
+vi.mock('@/features/terrain/TerrainDebugPanel', () => ({
+  TerrainDebugPanel: () => (
+    <div data-testid="terrain-debug-panel">Diagnostic terrain (mock)</div>
+  ),
+}))
+
 describe('App', () => {
   it('affiche le titre Sunset Horizon', () => {
     render(<App />)

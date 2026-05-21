@@ -9,6 +9,7 @@ import {
 } from '@/features/map'
 import { OfficialSunsetCard } from '@/features/results'
 import { useSolarData } from '@/features/solar'
+import { TerrainDebugPanel } from '@/features/terrain'
 import { todayAtLocalNoon } from '@/lib/time'
 
 export function App() {
@@ -42,6 +43,10 @@ export function App() {
         />
         <DateSelector value={observationDate} onChange={setObservationDate} />
         <OfficialSunsetCard solar={solar} hasPosition={position !== null} />
+        <TerrainDebugPanel
+          position={position}
+          sunsetAzimuthDeg={solar.sunsetAzimuthDeg}
+        />
       </main>
     </AppShell>
   )

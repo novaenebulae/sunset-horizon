@@ -33,11 +33,11 @@
 
 ## Epic 5 — IGN terrain
 
-- [ ] Client IGN isolé
-- [ ] Altitude observateur
-- [ ] Profil altimétrique
-- [ ] Gestion erreurs
-- [ ] Mock API
+- [x] Client IGN isolé
+- [x] Altitude observateur
+- [x] Profil altimétrique
+- [x] Gestion erreurs
+- [x] Mock API
 
 ## Epic 6 — Horizon
 
