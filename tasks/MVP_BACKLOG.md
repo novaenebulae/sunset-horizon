@@ -40,16 +40,16 @@ Prompt principal : `05_MAP_AND_PROFILE_PROMPT_REFINED.md`
 
 ### À finaliser
 
-- [ ] Corriger le layout desktop : ne plus limiter toute l'application à `512px` sur écran large.
-- [ ] Conserver une largeur confortable sur mobile.
-- [ ] Ajouter un conteneur responsive : largeur pleine sur mobile, layout en grille sur tablette/desktop.
-- [ ] Sur écran large, afficher idéalement :
+- [x] Corriger le layout desktop : ne plus limiter toute l'application à `512px` sur écran large.
+- [x] Conserver une largeur confortable sur mobile.
+- [x] Ajouter un conteneur responsive : largeur pleine sur mobile, layout en grille sur tablette/desktop.
+- [x] Sur écran large, afficher idéalement :
   - colonne gauche : carte + contrôles de position ;
   - colonne droite : résultats + profil altimétrique + spots.
-- [ ] Garder une largeur maximale lisible, par exemple `max-w-6xl` ou `max-w-7xl`, sans étirer excessivement les cartes de texte.
-- [ ] Vérifier les breakpoints Tailwind `sm`, `md`, `lg`, `xl`.
-- [ ] Vérifier que la carte garde une hauteur utile sur desktop et mobile.
-- [ ] Vérifier que le graphique Recharts reste lisible sur mobile.
+- [x] Garder une largeur maximale lisible, par exemple `max-w-6xl` ou `max-w-7xl`, sans étirer excessivement les cartes de texte.
+- [x] Vérifier les breakpoints Tailwind `sm`, `md`, `lg`, `xl`.
+- [x] Vérifier que la carte garde une hauteur utile sur desktop et mobile.
+- [x] Vérifier que le graphique Recharts reste lisible sur mobile.
 
 Critères d'acceptation :
 
@@ -62,7 +62,7 @@ Critères d'acceptation :
 
 ## Epic 3 — Position observateur
 
-Statut : terminé avec extension à ajouter.
+Statut : terminé.
 
 ### Déjà terminé
 
@@ -75,20 +75,20 @@ Statut : terminé avec extension à ajouter.
 
 Prompt principal : `05_MAP_AND_PROFILE_PROMPT_REFINED.md`
 
-- [ ] Ajouter une barre de recherche d'adresse.
-- [ ] Utiliser le service de géocodage Géoplateforme / IGN.
-- [ ] Ne pas utiliser l'ancien endpoint `api-adresse.data.gouv.fr`.
-- [ ] Créer un client isolé, par exemple `src/features/geocoding/geocodingClient.ts`.
-- [ ] Ajouter des types dédiés : `AddressSearchResult`, `GeocodingFeature`, etc.
-- [ ] Gérer les états : saisie vide, chargement, aucun résultat, erreur réseau, sélection réussie.
-- [ ] Au clic sur un résultat :
+- [x] Ajouter une barre de recherche d'adresse.
+- [x] Utiliser le service de géocodage Géoplateforme / IGN.
+- [x] Ne pas utiliser l'ancien endpoint `api-adresse.data.gouv.fr`.
+- [x] Créer un client isolé, par exemple `src/features/geocoding/geocodingClient.ts`.
+- [x] Ajouter des types dédiés : `AddressSearchResult`, `GeocodingFeature`, etc.
+- [x] Gérer les états : saisie vide, chargement, aucun résultat, erreur réseau, sélection réussie.
+- [x] Au clic sur un résultat :
   - mettre à jour le point observateur ;
   - recentrer la carte ;
   - déclencher le recalcul si la logique actuelle le permet, sinon afficher un bouton `Recalculer`.
-- [ ] Ajouter un debounce côté UI pour éviter les appels réseau à chaque frappe.
-- [ ] Limiter les résultats affichés, par exemple 5.
-- [ ] Afficher le label d'adresse et la ville / code postal si disponibles.
-- [ ] Prévoir un message si la recherche sort de la zone France ou si l'altimétrie IGN échoue ensuite.
+- [x] Ajouter un debounce côté UI pour éviter les appels réseau à chaque frappe.
+- [x] Limiter les résultats affichés, par exemple 5.
+- [x] Afficher le label d'adresse et la ville / code postal si disponibles.
+- [x] Prévoir un message si la recherche sort de la zone France ou si l'altimétrie IGN échoue ensuite.
 
 Critères d'acceptation :
 
@@ -138,7 +138,7 @@ Critères de non-régression :
 
 ## Epic 6 — Horizon et coucher corrigé
 
-Statut : implémenté, à auditer / valider.
+Statut : implémenté, vérifier correction de refraction atmosphérique
 
 Prompt recommandé si audit nécessaire : créer un prompt séparé `04C_HORIZON_AUDIT_PROMPT.md` ou intégrer l'audit dans la validation finale.
 
@@ -170,20 +170,20 @@ Critères d'acceptation :
 
 ## Epic 7 — Carte et profil altimétrique finalisés
 
-Statut : à finaliser.
+Statut : terminé.
 
 Prompt principal : `05_MAP_AND_PROFILE_PROMPT_REFINED.md`
 
-- [ ] Afficher marqueur observateur.
-- [ ] Afficher ligne d'azimut coucher.
-- [ ] Afficher point bloquant si disponible.
-- [ ] Afficher profil altimétrique avec Recharts.
-- [ ] Mettre en évidence le point bloquant sur le profil.
-- [ ] Afficher angle d'horizon maximal.
-- [ ] Afficher distance du point bloquant.
-- [ ] Afficher altitude du point bloquant.
-- [ ] Ajouter états : initial, loading, success, error.
-- [ ] Vérifier que carte et graphique utilisent la même source de données.
+- [x] Afficher marqueur observateur.
+- [x] Afficher ligne d'azimut coucher.
+- [x] Afficher point bloquant si disponible.
+- [x] Afficher profil altimétrique avec Recharts.
+- [x] Mettre en évidence le point bloquant sur le profil.
+- [x] Afficher angle d'horizon maximal.
+- [x] Afficher distance du point bloquant.
+- [x] Afficher altitude du point bloquant.
+- [x] Ajouter états : initial, loading, success, error.
+- [x] Vérifier que carte et graphique utilisent la même source de données.
 
 Critères d'acceptation :
 
@@ -195,22 +195,22 @@ Critères d'acceptation :
 
 ## Epic 8 — Stockage local des spots
 
-Statut : à faire.
+Statut : terminé.
 
 Prompt principal : `06A_LOCAL_STORAGE_LAYER_PROMPT_REFINED.md`
 
-- [ ] Créer `src/features/spots/spotTypes.ts`.
-- [ ] Créer `src/features/spots/spotStorage.ts`.
-- [ ] Créer `src/features/spots/spotStorage.test.ts`.
-- [ ] Définir `SavedSpot`.
-- [ ] Sauvegarder un spot.
-- [ ] Charger tous les spots.
-- [ ] Mettre à jour un spot.
-- [ ] Supprimer un spot.
-- [ ] Gérer version de schéma.
-- [ ] Gérer migration simple.
-- [ ] Gérer localStorage indisponible.
-- [ ] Gérer JSON invalide.
+- [x] Créer `src/features/spots/spotTypes.ts`.
+- [x] Créer `src/features/spots/spotStorage.ts`.
+- [x] Créer `src/features/spots/spotStorage.test.ts`.
+- [x] Définir `SavedSpot`.
+- [x] Sauvegarder un spot.
+- [x] Charger tous les spots.
+- [x] Mettre à jour un spot.
+- [x] Supprimer un spot.
+- [x] Gérer version de schéma.
+- [x] Gérer migration simple.
+- [x] Gérer localStorage indisponible.
+- [x] Gérer JSON invalide.
 
 Critères d'acceptation :
 
@@ -222,22 +222,22 @@ Critères d'acceptation :
 
 ## Epic 9 — Interface des spots sauvegardés
 
-Statut : à faire après Epic 8.
+Statut : terminé.
 
 Prompt principal : `06B_SAVED_SPOTS_UI_PROMPT_REFINED.md`
 
-- [ ] Bouton `Enregistrer ce spot`.
-- [ ] Formulaire de nommage.
-- [ ] Liste des spots.
-- [ ] Carte ou ligne par spot.
-- [ ] Action `Charger`.
-- [ ] Action `Supprimer`.
-- [ ] Affichage coordonnées.
-- [ ] Affichage altitude si disponible.
-- [ ] Affichage dernière date de calcul si disponible.
-- [ ] État vide.
-- [ ] Confirmation simple avant suppression si nécessaire.
-- [ ] Recalcul depuis un spot chargé.
+- [x] Bouton `Enregistrer ce spot`.
+- [x] Formulaire de nommage.
+- [x] Liste des spots.
+- [x] Carte ou ligne par spot.
+- [x] Action `Charger`.
+- [x] Action `Supprimer`.
+- [x] Affichage coordonnées.
+- [x] Affichage altitude si disponible.
+- [x] Affichage dernière date de calcul si disponible.
+- [x] État vide.
+- [x] Confirmation simple avant suppression si nécessaire.
+- [x] Recalcul depuis un spot chargé.
 
 Critères d'acceptation :
 

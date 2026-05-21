@@ -12,6 +12,7 @@ import {
 import { SunsetResultCard, HorizonProfileChart } from '@/features/results'
 import { useHorizonSunset } from '@/features/horizon'
 import { useSolarData } from '@/features/solar'
+import { SavedSpotsSection } from '@/features/spots'
 import { TerrainDebugPanel } from '@/features/terrain'
 import type { TerrainProfileResult, TerrainProviderId } from '@/features/terrain'
 import { todayAtLocalNoon } from '@/lib/time'
@@ -22,6 +23,7 @@ export function App() {
     useState<TerrainProviderId>('mock')
   const [profileOverride, setProfileOverride] =
     useState<TerrainProfileResult | null>(null)
+  const [lastAddressLabel, setLastAddressLabel] = useState<string | null>(null)
 
   const {
     state,
@@ -55,9 +57,17 @@ export function App() {
 
   const handleAddressSelect = useCallback(
     (result: AddressSearchResult) => {
+      setLastAddressLabel(result.label)
       setAddressPosition(result.lat, result.lon)
     },
     [setAddressPosition],
+  )
+
+  const handleLoadSavedSpot = useCallback(
+    (lat: number, lon: number) => {
+      setManualPosition(lat, lon)
+    },
+    [setManualPosition],
   )
 
   const horizon = useHorizonSunset({
@@ -113,6 +123,13 @@ export function App() {
               error={horizon.error}
               hasPosition={position !== null}
               solarError={solar.error}
+            />
+            <SavedSpotsSection
+              position={position}
+              horizonState={horizon.state}
+              horizonResult={horizon.result}
+              lastAddressLabel={lastAddressLabel}
+              onLoadSpot={handleLoadSavedSpot}
             />
             <TerrainDebugPanel
               position={position}

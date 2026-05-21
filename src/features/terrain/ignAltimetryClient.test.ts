@@ -101,7 +101,7 @@ describe('ignAltimetryClient', () => {
     })
   })
 
-  it('throws OUT_OF_COVERAGE for profile point with z=-99999', async () => {
+  it('throws OUT_OF_COVERAGE when profile has only no-data points', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
@@ -116,6 +116,46 @@ describe('ignAltimetryClient', () => {
     await expect(
       fetchProfileAlongLine([1, 2], [43, 44], 4),
     ).rejects.toMatchObject({
+      code: 'OUT_OF_COVERAGE',
+    })
+  })
+
+  it('truncates profile at first no-data point (coastal line into ocean)', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          elevations: [
+            { lon: -4.59668, lat: 48.063764, z: 79.76 },
+            { lon: -4.60247, lat: 48.066204, z: 74.94 },
+            { lon: -4.60827, lat: 48.068645, z: 71.01 },
+            { lon: -4.61406, lat: 48.071085, z: 25.94 },
+            { lon: -4.61986, lat: 48.073525, z: -99998.99 },
+            { lon: -4.62565, lat: 48.075965, z: -99998.99 },
+          ],
+        }),
+      }),
+    )
+
+    const result = await fetchProfileAlongLine([-4.6, -4.63], [48.06, 48.08], 6)
+    expect(result).toHaveLength(4)
+    expect(result.at(-1)?.z).toBeCloseTo(25.94)
+    expect(result.every((p) => p.z > IGN_NO_DATA_Z)).toBe(true)
+  })
+
+  it('treats -99998.99 as no-data for point elevation', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({ elevations: [-99998.99] }),
+      }),
+    )
+
+    await expect(fetchPointElevations([2.35], [48.85])).rejects.toMatchObject({
       code: 'OUT_OF_COVERAGE',
     })
   })

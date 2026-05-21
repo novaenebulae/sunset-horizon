@@ -13,6 +13,9 @@ export const DEFAULT_ALTI_RESOURCE = 'ign_rge_alti_wld'
 export const IGN_DELIMITER = '|'
 export const IGN_NO_DATA_Z = -99999
 
+/** IGN may return -99999 or values such as -99998.99 for no-data cells. */
+const IGN_NO_DATA_THRESHOLD_Z = -99990
+
 const MIN_REQUEST_INTERVAL_MS = 250
 
 let lastRequestAt = 0
@@ -36,7 +39,7 @@ type IgnRawResponse = {
 export type ProfileMode = 'simple' | 'accurate'
 
 export function isNoDataElevation(z: number): boolean {
-  return z === IGN_NO_DATA_Z
+  return z <= IGN_NO_DATA_THRESHOLD_Z
 }
 
 async function throttleRequests(): Promise<void> {
@@ -152,8 +155,14 @@ function parseProfileElevationResponse(data: IgnRawResponse): IgnElevationEntry[
       throw new TerrainError('API_ERROR', terrainErrorMessage('API_ERROR'))
     }
 
-    assertNoDataElevation(z)
+    if (isNoDataElevation(z)) {
+      break
+    }
     points.push({ lon, lat, z })
+  }
+
+  if (points.length < 2) {
+    throw new TerrainError('OUT_OF_COVERAGE', terrainErrorMessage('OUT_OF_COVERAGE'))
   }
 
   return points
