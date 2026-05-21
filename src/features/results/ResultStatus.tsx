@@ -9,7 +9,7 @@ const STATUS_MESSAGES: Record<
   Exclude<HorizonSunsetState, 'success'>,
   string
 > = {
-  idle: 'Choisis un point ou utilise ta position actuelle.',
+  idle: 'Choisissez un point, utilisez votre position actuelle ou recherchez une adresse.',
   ready: 'Calcul du coucher corrigé en attente des données solaires…',
   loading: 'Analyse du relief dans la direction du soleil…',
   error: 'Impossible de calculer le coucher corrigé.',

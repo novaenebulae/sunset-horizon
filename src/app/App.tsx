@@ -2,12 +2,14 @@ import { useCallback, useEffect, useState } from 'react'
 import { AppShell } from '@/components/AppShell'
 import { DateSelector } from '@/components/DateSelector'
 import { Header } from '@/components/Header'
+import type { AddressSearchResult } from '@/features/geocoding'
 import {
   LocationControls,
+  LocationToolbar,
   MapPanel,
   useObserverPosition,
 } from '@/features/map'
-import { SunsetResultCard } from '@/features/results'
+import { SunsetResultCard, HorizonProfileChart } from '@/features/results'
 import { useHorizonSunset } from '@/features/horizon'
 import { useSolarData } from '@/features/solar'
 import { TerrainDebugPanel } from '@/features/terrain'
@@ -26,6 +28,7 @@ export function App() {
     position,
     requestGps,
     setManualPosition,
+    setAddressPosition,
     clearError,
     isLoading,
   } = useObserverPosition()
@@ -50,6 +53,13 @@ export function App() {
     setProfileOverride(profile)
   }, [])
 
+  const handleAddressSelect = useCallback(
+    (result: AddressSearchResult) => {
+      setAddressPosition(result.lat, result.lon)
+    },
+    [setAddressPosition],
+  )
+
   const horizon = useHorizonSunset({
     position,
     observationDate,
@@ -59,33 +69,60 @@ export function App() {
     profileOverride,
   })
 
+  const horizonProfile = horizon.result?.horizonProfile ?? null
+  const blockingSample = horizonProfile?.blockingSample ?? null
+  const profileSamples = horizonProfile?.samples ?? []
+
   return (
     <AppShell>
       <Header />
-      <main className="flex flex-1 flex-col">
-        <MapPanel position={position} onPositionChange={setManualPosition} />
-        <LocationControls
+      <main className="flex flex-1 flex-col gap-6">
+        <LocationToolbar
           state={state}
-          position={position}
+          hasPosition={position !== null}
           isLoading={isLoading}
           onRequestGps={requestGps}
           onClearError={clearError}
+          onAddressSelect={handleAddressSelect}
         />
-        <DateSelector value={observationDate} onChange={setObservationDate} />
-        <SunsetResultCard
-          state={horizon.state}
-          result={horizon.result}
-          error={horizon.error}
-          hasPosition={position !== null}
-          solarError={solar.error}
-        />
-        <TerrainDebugPanel
-          position={position}
-          sunsetAzimuthDeg={solar.sunsetAzimuthDeg}
-          provider={terrainProvider}
-          onProviderChange={setTerrainProvider}
-          onProfileLoaded={handleProfileLoaded}
-        />
+
+        <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(360px,0.65fr)]">
+          <div className="flex min-w-0 flex-col gap-4">
+            <MapPanel
+              position={position}
+              onPositionChange={setManualPosition}
+              sunsetAzimuthDeg={solar.sunsetAzimuthDeg}
+              profileSamples={profileSamples}
+              blockingSample={blockingSample}
+            />
+            <HorizonProfileChart
+              horizonProfile={horizonProfile}
+              state={horizon.state}
+            />
+            <LocationControls position={position} />
+          </div>
+
+          <div className="flex min-w-0 flex-col gap-4">
+            <DateSelector
+              value={observationDate}
+              onChange={setObservationDate}
+            />
+            <SunsetResultCard
+              state={horizon.state}
+              result={horizon.result}
+              error={horizon.error}
+              hasPosition={position !== null}
+              solarError={solar.error}
+            />
+            <TerrainDebugPanel
+              position={position}
+              sunsetAzimuthDeg={solar.sunsetAzimuthDeg}
+              provider={terrainProvider}
+              onProviderChange={setTerrainProvider}
+              onProfileLoaded={handleProfileLoaded}
+            />
+          </div>
+        </div>
       </main>
     </AppShell>
   )

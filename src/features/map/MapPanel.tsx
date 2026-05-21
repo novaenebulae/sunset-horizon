@@ -1,21 +1,33 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import {
   MapContainer,
   Marker,
+  Polyline,
   TileLayer,
   useMap,
   useMapEvents,
 } from 'react-leaflet'
+import type { TerrainSample } from '@/features/horizon/horizonTypes'
+import {
+  azimuthLineEnd,
+  blockingPointCoords,
+} from './mapOverlays'
 import type { ObserverPosition } from './types'
-import { observerIcon } from './leafletIcons'
+import { blockingIcon, observerIcon } from './leafletIcons'
 
 const FRANCE_CENTER: [number, number] = [46.5, 2.5]
 const DEFAULT_ZOOM = 6
 const POSITION_ZOOM = 13
 
+const AZIMUTH_COLOR = '#F97316'
+const BLOCKING_LINE_COLOR = '#38BDF8'
+
 type MapPanelProps = {
   position: ObserverPosition | null
   onPositionChange: (lat: number, lon: number) => void
+  sunsetAzimuthDeg?: number | null
+  profileSamples?: TerrainSample[]
+  blockingSample?: TerrainSample | null
 }
 
 function MapClickHandler({
@@ -64,7 +76,79 @@ function DraggableMarker({
   )
 }
 
-export function MapPanel({ position, onPositionChange }: MapPanelProps) {
+function MapOverlays({
+  position,
+  sunsetAzimuthDeg,
+  profileSamples = [],
+  blockingSample,
+}: {
+  position: ObserverPosition
+  sunsetAzimuthDeg: number | null | undefined
+  profileSamples?: TerrainSample[]
+  blockingSample?: TerrainSample | null
+}) {
+  const observer = { lat: position.lat, lon: position.lon }
+
+  const azimuthLine = useMemo(() => {
+    if (sunsetAzimuthDeg === null || sunsetAzimuthDeg === undefined) {
+      return null
+    }
+    const end = azimuthLineEnd(observer, sunsetAzimuthDeg, profileSamples)
+    return [
+      [position.lat, position.lon],
+      [end.lat, end.lon],
+    ] as [number, number][]
+  }, [observer, position, profileSamples, sunsetAzimuthDeg])
+
+  const blockingLine = useMemo(() => {
+    if (!blockingSample) return null
+    const [lat, lon] = blockingPointCoords(blockingSample)
+    return [
+      [position.lat, position.lon],
+      [lat, lon],
+    ] as [number, number][]
+  }, [blockingSample, position])
+
+  return (
+    <>
+      {azimuthLine && (
+        <Polyline
+          positions={azimuthLine}
+          pathOptions={{
+            color: AZIMUTH_COLOR,
+            weight: 3,
+            opacity: 0.9,
+          }}
+        />
+      )}
+      {blockingLine && (
+        <Polyline
+          positions={blockingLine}
+          pathOptions={{
+            color: BLOCKING_LINE_COLOR,
+            weight: 2,
+            opacity: 0.7,
+            dashArray: '6 4',
+          }}
+        />
+      )}
+      {blockingSample && (
+        <Marker
+          position={blockingPointCoords(blockingSample)}
+          icon={blockingIcon}
+        />
+      )}
+    </>
+  )
+}
+
+export function MapPanel({
+  position,
+  onPositionChange,
+  sunsetAzimuthDeg = null,
+  profileSamples = [],
+  blockingSample = null,
+}: MapPanelProps) {
   return (
     <section
       className="overflow-hidden rounded-xl border border-border"
@@ -73,7 +157,7 @@ export function MapPanel({ position, onPositionChange }: MapPanelProps) {
       <MapContainer
         center={FRANCE_CENTER}
         zoom={DEFAULT_ZOOM}
-        className="h-64 w-full z-0"
+        className="z-0 h-64 w-full lg:h-80"
         scrollWheelZoom
       >
         <TileLayer
@@ -83,10 +167,18 @@ export function MapPanel({ position, onPositionChange }: MapPanelProps) {
         <MapClickHandler onPositionChange={onPositionChange} />
         <MapViewSync position={position} />
         {position && (
-          <DraggableMarker
-            position={position}
-            onPositionChange={onPositionChange}
-          />
+          <>
+            <DraggableMarker
+              position={position}
+              onPositionChange={onPositionChange}
+            />
+            <MapOverlays
+              position={position}
+              sunsetAzimuthDeg={sunsetAzimuthDeg}
+              profileSamples={profileSamples}
+              blockingSample={blockingSample}
+            />
+          </>
         )}
       </MapContainer>
     </section>

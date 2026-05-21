@@ -39,7 +39,7 @@ export function SunsetResultCard({
   if (!hasPosition) {
     return (
       <section
-        className="mt-4 rounded-xl border border-border bg-surface p-6"
+        className="rounded-xl border border-border bg-surface p-6"
         aria-label="Coucher corrigé"
       >
         <ResultStatus state="idle" />
@@ -50,7 +50,7 @@ export function SunsetResultCard({
   if (solarError) {
     return (
       <section
-        className="mt-4 rounded-xl border border-border bg-surface p-6"
+        className="rounded-xl border border-border bg-surface p-6"
         aria-label="Coucher corrigé"
       >
         <p className="text-sm text-error">{solarError}</p>
@@ -63,7 +63,7 @@ export function SunsetResultCard({
 
   return (
     <section
-      className="mt-4 rounded-xl border border-border bg-surface p-6"
+      className="rounded-xl border border-border bg-surface p-6"
       aria-label="Coucher corrigé"
     >
       <div className="flex items-center justify-between gap-2">

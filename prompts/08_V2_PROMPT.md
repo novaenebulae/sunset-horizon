@@ -2,11 +2,13 @@
 
 Objectifs v2 validés :
 
-1. Mode lever de soleil.
-2. Horizon 360 complet.
-3. Carte solaire annuelle.
-4. Recommandation du meilleur spot.
-5. Simulation visuelle du coucher.
+1. Possibilité de choisir une date future ou afficher
+2. Mode lever de soleil.
+3. Horizon 360 complet.
+4. Carte solaire annuelle.
+5. Recommandation du meilleur spot.
+6. Simulation visuelle du coucher.
+7. Ajout de la météo à la date sélectionnée
 
 Contraintes :
 

@@ -1,4 +1,4 @@
-export type PositionSource = 'gps' | 'manual'
+export type PositionSource = 'gps' | 'manual' | 'address'
 
 export type GeolocationErrorCode =
   | 'PERMISSION_DENIED'

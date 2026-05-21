@@ -2,8 +2,20 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { App } from '@/app/App'
 
+vi.mock('@/features/map/LocationToolbar', () => ({
+  LocationToolbar: () => (
+    <div data-testid="location-toolbar">Contrôles position (mock)</div>
+  ),
+}))
+
 vi.mock('@/features/map/MapPanel', () => ({
   MapPanel: () => <div data-testid="map-panel">Carte (mock)</div>,
+}))
+
+vi.mock('@/features/results/HorizonProfileChart', () => ({
+  HorizonProfileChart: () => (
+    <div data-testid="horizon-profile-chart">Profil (mock)</div>
+  ),
 }))
 
 vi.mock('@/features/terrain/TerrainDebugPanel', () => ({
@@ -18,22 +30,14 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: /sunset horizon/i })).toBeInTheDocument()
   })
 
-  it('affiche le bouton Me localiser', () => {
-    render(<App />)
-    expect(
-      screen.getByRole('button', { name: /me localiser/i }),
-    ).toBeInTheDocument()
-  })
 
   it('affiche le sélecteur de date', () => {
     render(<App />)
     expect(screen.getByLabelText(/date d'observation/i)).toBeInTheDocument()
   })
 
-  it('affiche le message initial pour le coucher corrigé', () => {
+  it('affiche les contrôles de position en tête de page', () => {
     render(<App />)
-    expect(
-      screen.getByText(/choisis un point ou utilise ta position actuelle/i),
-    ).toBeInTheDocument()
+    expect(screen.getByTestId('location-toolbar')).toBeInTheDocument()
   })
 })

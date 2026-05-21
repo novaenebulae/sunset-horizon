@@ -1,3 +1,4 @@
+export { HorizonProfileChart } from './HorizonProfileChart'
 export { OfficialSunsetCard } from './OfficialSunsetCard'
 export { ResultMetric } from './ResultMetric'
 export { ResultStatus } from './ResultStatus'

@@ -42,6 +42,17 @@ export function useObserverPosition() {
     setState({ status: 'ready', position })
   }, [])
 
+  const setAddressPosition = useCallback((lat: number, lon: number) => {
+    const position: ObserverPosition = {
+      lat,
+      lon,
+      accuracyM: null,
+      source: 'address',
+      updatedAt: new Date(),
+    }
+    setState({ status: 'ready', position })
+  }, [])
+
   const clearError = useCallback(() => {
     setState((current) =>
       current.status === 'error' ? { status: 'idle' } : current,
@@ -56,6 +67,7 @@ export function useObserverPosition() {
     position,
     requestGps,
     setManualPosition,
+    setAddressPosition,
     clearError,
     isLoading: state.status === 'loading',
   }
