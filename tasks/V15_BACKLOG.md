@@ -171,30 +171,32 @@ Critères d’acceptation :
 
 Objectif : visualiser l’horizon effectif autour de l’observateur.
 
-- [ ] Créer `src/features/horizon360/`.
-- [ ] Créer `Horizon360Sample`.
-- [ ] Créer `horizon360Service`.
-- [ ] Échantillonner les azimuts tous les 15° par défaut.
-- [ ] Utiliser mode rapide par défaut.
-- [ ] Réutiliser les réglages si compatibles.
-- [ ] Réutiliser le cache terrain.
-- [ ] Calculer angle horizon par azimut.
-- [ ] Afficher progression.
-- [ ] Permettre annulation.
-- [ ] Ne pas recalculer automatiquement.
-- [ ] Afficher graphique azimut / angle horizon.
-- [ ] Mettre en évidence azimut du coucher.
-- [ ] Afficher warnings en cas de calcul partiel.
-- [ ] Ajouter tests avec terrain provider mock.
+Statut : terminé.
+
+- [x] Créer `src/features/horizon360/`.
+- [x] Créer `Horizon360Sample`.
+- [x] Créer `horizon360Service`.
+- [x] Échantillonner les azimuts tous les 15° par défaut.
+- [x] Utiliser mode rapide par défaut.
+- [x] Réutiliser les réglages si compatibles.
+- [x] Réutiliser le cache terrain.
+- [x] Calculer angle horizon par azimut.
+- [x] Afficher progression.
+- [x] Permettre annulation.
+- [x] Ne pas recalculer automatiquement.
+- [x] Afficher graphique azimut / angle horizon.
+- [x] Mettre en évidence azimut du coucher.
+- [x] Afficher warnings en cas de calcul partiel.
+- [x] Ajouter tests avec terrain provider mock.
 
 Critères d’acceptation :
 
-- [ ] Le calcul est déclenché manuellement.
-- [ ] L’UI ne se bloque pas.
-- [ ] Un calcul partiel reste exploitable.
-- [ ] L’azimut du coucher est visible.
-- [ ] `npm test` passe.
-- [ ] `npm run build` passe.
+- [x] Le calcul est déclenché manuellement.
+- [x] L’UI ne se bloque pas.
+- [x] Un calcul partiel reste exploitable.
+- [x] L’azimut du coucher est visible.
+- [x] `npm test` passe.
+- [x] `npm run build` passe.
 
 ## Epic 7 — Validation et polish V1.5
 
@@ -206,7 +208,7 @@ Objectif : livrer une version confortable et cohérente.
 - [ ] Vérifier cache.
 - [ ] Vérifier comparaison.
 - [x] Vérifier export/import.
-- [ ] Vérifier horizon 360.
+- [x] Vérifier horizon 360.
 - [ ] Tester mobile.
 - [ ] Tester tablette.
 - [ ] Tester desktop large.

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef, type RefObject } from 'react'
 import {
   MapContainer,
   Marker,
@@ -50,6 +50,26 @@ function MapViewSync({ position }: { position: ObserverPosition | null }) {
     if (!position) return
     map.flyTo([position.lat, position.lon], POSITION_ZOOM, { duration: 0.8 })
   }, [map, position?.lat, position?.lon, position?.source])
+
+  return null
+}
+
+function MapResizeSync({ containerRef }: { containerRef: RefObject<HTMLElement | null> }) {
+  const map = useMap()
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const invalidate = () => {
+      map.invalidateSize()
+    }
+
+    invalidate()
+    const observer = new ResizeObserver(invalidate)
+    observer.observe(container)
+    return () => observer.disconnect()
+  }, [map, containerRef])
 
   return null
 }
@@ -149,15 +169,18 @@ export function MapPanel({
   profileSamples = [],
   blockingSample = null,
 }: MapPanelProps) {
+  const sectionRef = useRef<HTMLElement>(null)
+
   return (
     <section
-      className="overflow-hidden rounded-xl border border-border"
+      ref={sectionRef}
+      className="h-[50dvh] min-h-[50dvh] w-full overflow-hidden rounded-xl border border-border max-lg:max-h-[50dvh] lg:aspect-square lg:h-auto lg:min-h-[min(50dvh,100%)]"
       aria-label="Carte de sélection du point d'observation"
     >
       <MapContainer
         center={FRANCE_CENTER}
         zoom={DEFAULT_ZOOM}
-        className="z-0 h-64 w-full lg:h-80"
+        className="z-0 h-full min-h-[inherit] w-full"
         scrollWheelZoom
       >
         <TileLayer
@@ -165,6 +188,7 @@ export function MapPanel({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <MapClickHandler onPositionChange={onPositionChange} />
+        <MapResizeSync containerRef={sectionRef} />
         <MapViewSync position={position} />
         {position && (
           <>
