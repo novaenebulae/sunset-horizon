@@ -8,6 +8,7 @@ import {
 import { fetchTerrainProfile } from '@/features/terrain/terrainProfile'
 import { toTerrainError } from '@/features/terrain/terrainErrors'
 import type {
+  TerrainProfileFetchSource,
   TerrainProfileResult,
   TerrainProviderId,
 } from '@/features/terrain/terrainTypes'
@@ -27,6 +28,8 @@ export type UseHorizonSunsetResult = {
   result: SunsetResult | null
   error: string | null
   provider: TerrainProviderId
+  /** Source du dernier profil terrain chargé pour le calcul en cours. */
+  profileFetchSource: TerrainProfileFetchSource | null
 }
 
 type UseHorizonSunsetParams = {
@@ -77,6 +80,8 @@ export function useHorizonSunset({
   const [state, setState] = useState<HorizonSunsetState>('idle')
   const [result, setResult] = useState<SunsetResult | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [profileFetchSource, setProfileFetchSource] =
+    useState<TerrainProfileFetchSource | null>(null)
   const requestIdRef = useRef(0)
 
   useEffect(() => {
@@ -84,6 +89,7 @@ export function useHorizonSunset({
       setState('idle')
       setResult(null)
       setError(null)
+      setProfileFetchSource(null)
       return
     }
 
@@ -91,12 +97,14 @@ export function useHorizonSunset({
       setState('ready')
       setResult(null)
       setError(null)
+      setProfileFetchSource(null)
       return
     }
 
     setState('loading')
     setResult(null)
     setError(null)
+    setProfileFetchSource(null)
 
     const requestId = ++requestIdRef.current
     const azimuthDeg = sunsetAzimuthDeg ?? DEFAULT_AZIMUTH_DEG
@@ -105,19 +113,26 @@ export function useHorizonSunset({
       void (async () => {
         try {
           let profile: TerrainProfileResult
+          let fetchSource: TerrainProfileFetchSource
 
           if (profileOverride) {
             profile = profileOverride
+            fetchSource =
+              profileOverride.source === 'mock' ? 'mock' : 'ign-geoplateforme'
           } else {
-            profile = await fetchTerrainProfile({
+            const fetched = await fetchTerrainProfile({
               observer: { lat: position.lat, lon: position.lon },
               azimuthDeg,
               provider,
               ...terrainParams,
             })
+            profile = fetched.profile
+            fetchSource = fetched.fetchSource
           }
 
           if (requestId !== requestIdRef.current) return
+
+          setProfileFetchSource(fetchSource)
 
           if (profile.points.length < 2) {
             setState('insufficient')
@@ -143,6 +158,7 @@ export function useHorizonSunset({
           setState('error')
           setResult(null)
           setError(terrainErr.message)
+          setProfileFetchSource(null)
         }
       })()
     }, debounceMs)
@@ -166,5 +182,5 @@ export function useHorizonSunset({
     debounceMs,
   ])
 
-  return { state, result, error, provider }
+  return { state, result, error, provider, profileFetchSource }
 }

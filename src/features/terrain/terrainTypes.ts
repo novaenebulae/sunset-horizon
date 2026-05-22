@@ -31,6 +31,14 @@ export type FetchTerrainProfileParams = {
   provider: TerrainProviderId
 }
 
+/** How the terrain profile was obtained for the latest fetch. */
+export type TerrainProfileFetchSource = 'cache' | 'ign-geoplateforme' | 'mock'
+
+export type FetchTerrainProfileResult = {
+  profile: TerrainProfileResult
+  fetchSource: TerrainProfileFetchSource
+}
+
 export const DEFAULT_MAX_DISTANCE_M = 30_000
 /** Default terrain step for Normal/balanced preset (150 m). */
 export const DEFAULT_STEP_M = 150

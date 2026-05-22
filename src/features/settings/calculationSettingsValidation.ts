@@ -105,6 +105,10 @@ export function validateCalculationSettings(
     input.terrainDebugEnabled,
     false,
   )
+  const terrainCachePanelEnabled = parseBoolean(
+    input.terrainCachePanelEnabled,
+    false,
+  )
 
   return {
     precisionMode: mode,
@@ -114,5 +118,6 @@ export function validateCalculationSettings(
     refinementStepSeconds,
     refractionEnabled,
     terrainDebugEnabled,
+    terrainCachePanelEnabled,
   }
 }

@@ -11,11 +11,17 @@ import {
 import { toTerrainError } from './terrainErrors'
 import type {
   FetchTerrainProfileParams,
+  FetchTerrainProfileResult,
   ObserverElevationResult,
   TerrainProfileResult,
   TerrainProviderId,
 } from './terrainTypes'
 import { DEFAULT_MAX_DISTANCE_M, DEFAULT_STEP_M } from './terrainTypes'
+import {
+  buildTerrainProfileCacheKey,
+  getCachedTerrainProfile,
+  setCachedTerrainProfile,
+} from '@/features/cache'
 
 export function buildSampledLine(
   observer: LatLon,
@@ -52,7 +58,7 @@ export async function getObserverElevation(
 
 export async function fetchTerrainProfile(
   params: FetchTerrainProfileParams,
-): Promise<TerrainProfileResult> {
+): Promise<FetchTerrainProfileResult> {
   const {
     observer,
     azimuthDeg,
@@ -62,7 +68,28 @@ export async function fetchTerrainProfile(
   } = params
 
   if (provider === 'mock') {
-    return buildMockTerrainProfile(observer, azimuthDeg, maxDistanceM, stepM)
+    return {
+      profile: buildMockTerrainProfile(
+        observer,
+        azimuthDeg,
+        maxDistanceM,
+        stepM,
+      ),
+      fetchSource: 'mock',
+    }
+  }
+
+  const cacheKey = buildTerrainProfileCacheKey({
+    observer,
+    azimuthDeg,
+    maxDistanceM,
+    stepM,
+    provider: 'ign',
+  })
+
+  const cached = await getCachedTerrainProfile(cacheKey).catch(() => null)
+  if (cached) {
+    return { profile: cached, fetchSource: 'cache' }
   }
 
   try {
@@ -81,7 +108,7 @@ export async function fetchTerrainProfile(
       distanceM: haversineDistanceM(observer, { lat: entry.lat, lon: entry.lon }),
     }))
 
-    return {
+    const profile: TerrainProfileResult = {
       observer: {
         ...observer,
         elevationM: observerElevation.elevationM,
@@ -90,6 +117,10 @@ export async function fetchTerrainProfile(
       points,
       source: 'ign-geoplateforme',
     }
+
+    void setCachedTerrainProfile(cacheKey, profile).catch(() => {})
+
+    return { profile, fetchSource: 'ign-geoplateforme' }
   } catch (error) {
     throw toTerrainError(error)
   }

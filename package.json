@@ -28,6 +28,7 @@
     "@types/react-dom": "^19.1.2",
     "@types/suncalc": "^1.9.2",
     "@vitejs/plugin-react": "^4.4.1",
+    "fake-indexeddb": "^6.0.0",
     "jsdom": "^26.1.0",
     "tailwindcss": "^4.1.7",
     "typescript": "~5.8.3",

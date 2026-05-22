@@ -12,6 +12,7 @@ export type CalculationSettings = {
   refinementStepSeconds: number
   refractionEnabled: boolean
   terrainDebugEnabled: boolean
+  terrainCachePanelEnabled: boolean
 }
 
 export type CalculationSettingsStoragePayload = {

@@ -21,7 +21,7 @@ describe('terrainProfile', () => {
   })
 
   it('fetchTerrainProfile mock has increasing distances', async () => {
-    const profile = await fetchTerrainProfile({
+    const { profile, fetchSource } = await fetchTerrainProfile({
       observer: OBSERVER,
       azimuthDeg: 270,
       maxDistanceM: 10_000,
@@ -29,6 +29,7 @@ describe('terrainProfile', () => {
       provider: 'mock',
     })
 
+    expect(fetchSource).toBe('mock')
     expect(profile.source).toBe('mock')
     expect(profile.points.length).toBeGreaterThan(1)
     expect(profile.points[0].distanceM).toBe(0)

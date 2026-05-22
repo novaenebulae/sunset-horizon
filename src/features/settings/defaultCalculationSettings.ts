@@ -15,6 +15,7 @@ export const CALCULATION_SETTINGS_PRESETS: Record<
     refinementStepSeconds: 30,
     refractionEnabled: true,
     terrainDebugEnabled: false,
+    terrainCachePanelEnabled: false,
   },
   balanced: {
     precisionMode: 'balanced',
@@ -24,6 +25,7 @@ export const CALCULATION_SETTINGS_PRESETS: Record<
     refinementStepSeconds: 15,
     refractionEnabled: true,
     terrainDebugEnabled: false,
+    terrainCachePanelEnabled: false,
   },
   precise: {
     precisionMode: 'precise',
@@ -33,6 +35,7 @@ export const CALCULATION_SETTINGS_PRESETS: Record<
     refinementStepSeconds: 5,
     refractionEnabled: true,
     terrainDebugEnabled: false,
+    terrainCachePanelEnabled: false,
   },
 }
 

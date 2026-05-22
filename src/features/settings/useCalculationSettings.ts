@@ -66,6 +66,13 @@ export function useCalculationSettings() {
     [persist, settings],
   )
 
+  const setTerrainCachePanelEnabled = useCallback(
+    (enabled: boolean) => {
+      persist({ ...settings, terrainCachePanelEnabled: enabled })
+    },
+    [persist, settings],
+  )
+
   const resetSettings = useCallback(() => {
     persist(getPresetSettings('balanced'))
   }, [persist])
@@ -79,6 +86,7 @@ export function useCalculationSettings() {
     setPrecisionMode,
     setRefractionEnabled,
     setTerrainDebugEnabled,
+    setTerrainCachePanelEnabled,
     resetSettings,
     dismissError,
   }

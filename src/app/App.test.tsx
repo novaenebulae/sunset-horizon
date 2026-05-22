@@ -43,6 +43,13 @@ describe('App', () => {
     expect(screen.queryByTestId('terrain-debug-panel')).not.toBeInTheDocument()
   })
 
+  it('masque le panneau cache terrain par défaut', () => {
+    render(<App />)
+    expect(
+      screen.queryByRole('region', { name: /^cache terrain$/i }),
+    ).not.toBeInTheDocument()
+  })
+
   it('affiche les contrôles de position en tête de page', () => {
     render(<App />)
     expect(screen.getAllByTestId('location-toolbar').length).toBeGreaterThan(0)

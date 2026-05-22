@@ -76,7 +76,7 @@ export function useTerrainDebug({
     setError(null)
 
     try {
-      const result = await fetchTerrainProfile({
+      const { profile: result } = await fetchTerrainProfile({
         observer: { lat: position.lat, lon: position.lon },
         azimuthDeg,
         provider,

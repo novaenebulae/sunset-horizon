@@ -13,6 +13,7 @@ import { SunsetResultCard, HorizonProfileChart } from '@/features/results'
 import { useHorizonSunset } from '@/features/horizon'
 import { useSolarData } from '@/features/solar'
 import { SavedSpotsSection } from '@/features/spots'
+import { CacheSettingsPanel } from '@/features/cache'
 import {
   CalculationSettingsPanel,
   useCalculationSettings,
@@ -35,6 +36,7 @@ export function App() {
     setPrecisionMode,
     setRefractionEnabled,
     setTerrainDebugEnabled,
+    setTerrainCachePanelEnabled,
     resetSettings,
     dismissError: dismissSettingsError,
   } = useCalculationSettings()
@@ -174,9 +176,16 @@ export function App() {
                 onPrecisionModeChange={setPrecisionMode}
                 onRefractionChange={setRefractionEnabled}
                 onTerrainDebugChange={setTerrainDebugEnabled}
+                onTerrainCachePanelChange={setTerrainCachePanelEnabled}
                 onReset={resetSettings}
                 onDismissError={dismissSettingsError}
               />
+              {calculationSettings.terrainCachePanelEnabled && (
+                <CacheSettingsPanel
+                  profileFetchSource={horizon.profileFetchSource}
+                  horizonLoading={horizon.state === 'loading'}
+                />
+              )}
               {calculationSettings.terrainDebugEnabled && (
                 <TerrainDebugPanel
                   position={position}

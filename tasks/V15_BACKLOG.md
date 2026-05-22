@@ -75,32 +75,34 @@ Critères d’acceptation :
 
 Objectif : éviter les téléchargements / recalculs de profils identiques ou très proches.
 
-- [ ] Créer `src/features/cache/`.
-- [ ] Créer `TerrainProfileCacheEntry`.
-- [ ] Créer `cacheKey.ts`.
-- [ ] Intégrer position observateur arrondie dans la clé.
-- [ ] Intégrer azimut arrondi dans la clé.
-- [ ] Intégrer distance maximale dans la clé.
-- [ ] Intégrer pas d’échantillonnage dans la clé.
-- [ ] Intégrer version d’algorithme dans la clé.
-- [ ] Ajouter TTL long.
-- [ ] Ajouter lecture cache.
-- [ ] Ajouter écriture cache.
-- [ ] Ajouter suppression du cache.
-- [ ] Ajouter estimation de taille si possible.
-- [ ] Gérer IndexedDB indisponible.
-- [ ] Ne jamais bloquer le calcul si le cache échoue.
-- [ ] Brancher le cache au terrain provider.
-- [ ] Ajouter tests cache hit / cache miss.
+Statut : terminé.
+
+- [x] Créer `src/features/cache/`.
+- [x] Créer `TerrainProfileCacheEntry`.
+- [x] Créer `cacheKey.ts`.
+- [x] Intégrer position observateur arrondie dans la clé.
+- [x] Intégrer azimut arrondi dans la clé.
+- [x] Intégrer distance maximale dans la clé.
+- [x] Intégrer pas d’échantillonnage dans la clé.
+- [x] Intégrer version d’algorithme dans la clé.
+- [x] Ajouter TTL long (30 jours).
+- [x] Ajouter lecture cache.
+- [x] Ajouter écriture cache.
+- [x] Ajouter suppression du cache.
+- [x] Ajouter estimation de taille si possible.
+- [x] Gérer IndexedDB indisponible.
+- [x] Ne jamais bloquer le calcul si le cache échoue.
+- [x] Brancher le cache au terrain provider.
+- [x] Ajouter tests cache hit / cache miss.
 
 Critères d’acceptation :
 
-- [ ] Un profil identique est relu depuis le cache.
-- [ ] Un changement de paramètres crée une nouvelle clé.
-- [ ] Une erreur IndexedDB bascule vers le calcul normal.
-- [ ] Le cache peut être vidé depuis l’interface.
-- [ ] `npm test` passe.
-- [ ] `npm run build` passe.
+- [x] Un profil identique est relu depuis le cache.
+- [x] Un changement de paramètres crée une nouvelle clé.
+- [x] Une erreur IndexedDB bascule vers le calcul normal.
+- [x] Le cache peut être vidé depuis l’interface.
+- [x] `npm test` passe.
+- [x] `npm run build` passe.
 
 ## Epic 4 — Comparaison de spots
 

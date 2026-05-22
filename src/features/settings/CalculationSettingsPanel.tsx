@@ -8,6 +8,7 @@ type CalculationSettingsPanelProps = {
   onPrecisionModeChange: (mode: PrecisionMode) => void
   onRefractionChange: (enabled: boolean) => void
   onTerrainDebugChange: (enabled: boolean) => void
+  onTerrainCachePanelChange: (enabled: boolean) => void
   onReset: () => void
   onDismissError?: () => void
 }
@@ -29,6 +30,7 @@ export function CalculationSettingsPanel({
   onPrecisionModeChange,
   onRefractionChange,
   onTerrainDebugChange,
+  onTerrainCachePanelChange,
   onReset,
   onDismissError,
 }: CalculationSettingsPanelProps) {
@@ -111,6 +113,18 @@ export function CalculationSettingsPanel({
             className="h-4 w-4 rounded border-border accent-accent-sun"
           />
           Afficher le diagnostic terrain (mode debug)
+        </label>
+
+        <label className="flex cursor-pointer items-center gap-2 text-sm text-text-secondary">
+          <input
+            type="checkbox"
+            checked={settings.terrainCachePanelEnabled}
+            onChange={(event) =>
+              onTerrainCachePanelChange(event.target.checked)
+            }
+            className="h-4 w-4 rounded border-border accent-accent-sun"
+          />
+          Afficher le cache terrain (IndexedDB)
         </label>
 
         {settings.precisionMode === 'precise' && (
