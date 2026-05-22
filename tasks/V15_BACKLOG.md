@@ -137,89 +137,37 @@ Critères d’acceptation :
 - [x] `npm test` passe.
 - [x] `npm run build` passe.
 
-## Epic 5 — URL partageable sans backend
-
-Objectif : permettre de rouvrir ou partager une configuration sans compte utilisateur.
-
-- [ ] Définir les paramètres supportés dans l’URL.
-- [ ] Inclure latitude.
-- [ ] Inclure longitude.
-- [ ] Inclure date d’observation.
-- [ ] Inclure mode de précision.
-- [ ] Inclure éventuellement réfraction activée.
-- [ ] Ne pas inclure de nom privé par défaut.
-- [ ] Ajouter parsing robuste au chargement.
-- [ ] Ajouter validation des paramètres.
-- [ ] Ajouter bouton “Copier le lien”.
-- [ ] Ajouter message de succès / erreur.
-- [ ] Ajouter tests de parsing / sérialisation.
-
-Critères d’acceptation :
-
-- [ ] Un lien copié rouvre le même point.
-- [ ] Un lien copié rouvre la même date.
-- [ ] Les paramètres invalides sont ignorés proprement.
-- [ ] Aucune donnée privée inutile n’est exposée.
-- [ ] `npm test` passe.
-- [ ] `npm run build` passe.
-
-## Epic 6 — Export / import JSON local
+## Epic 5 — Export / import JSON local
 
 Objectif : permettre à l’utilisateur de sauvegarder et transférer ses données locales.
 
-- [ ] Définir `SunsetHorizonExport`.
-- [ ] Exporter spots.
-- [ ] Exporter réglages.
-- [ ] Exporter historiques.
-- [ ] Ne pas exporter le cache IndexedDB par défaut.
-- [ ] Ajouter version de schéma.
-- [ ] Ajouter date d’export.
-- [ ] Ajouter bouton export JSON.
-- [ ] Ajouter import JSON.
-- [ ] Valider le fichier importé.
-- [ ] Proposer fusion ou remplacement.
-- [ ] Gérer conflits d’id.
-- [ ] Afficher résumé avant import.
-- [ ] Ajouter tests d’import valide / invalide.
+Statut : terminé.
+
+- [x] Définir `SunsetHorizonExport`.
+- [x] Exporter spots.
+- [x] Exporter réglages.
+- [x] Exporter historiques.
+- [x] Ne pas exporter le cache IndexedDB par défaut.
+- [x] Ajouter version de schéma.
+- [x] Ajouter date d’export.
+- [x] Ajouter bouton export JSON.
+- [x] Ajouter import JSON.
+- [x] Valider le fichier importé.
+- [x] Proposer fusion ou remplacement.
+- [x] Gérer conflits d’id.
+- [x] Afficher résumé avant import.
+- [x] Ajouter tests d’import valide / invalide.
 
 Critères d’acceptation :
 
-- [ ] L’export produit un JSON lisible.
-- [ ] L’import restaure spots, réglages et historiques.
-- [ ] Un JSON invalide ne casse pas l’application.
-- [ ] Le cache n’est pas exporté sauf choix explicite futur.
-- [ ] `npm test` passe.
-- [ ] `npm run build` passe.
+- [x] L’export produit un JSON lisible.
+- [x] L’import restaure spots, réglages et historiques.
+- [x] Un JSON invalide ne casse pas l’application.
+- [x] Le cache n’est pas exporté sauf choix explicite futur.
+- [x] `npm test` passe.
+- [x] `npm run build` passe.
 
-## Epic 7 — Panneau diagnostic du calcul
-
-Objectif : rendre le calcul vérifiable et faciliter le debug.
-
-- [ ] Créer `src/features/diagnostics/`.
-- [ ] Créer `CalculationDiagnostic`.
-- [ ] Mesurer temps de calcul total.
-- [ ] Afficher mode de précision utilisé.
-- [ ] Afficher distance max.
-- [ ] Afficher pas d’échantillonnage.
-- [ ] Afficher nombre d’échantillons terrain.
-- [ ] Afficher azimut du calcul.
-- [ ] Afficher angle horizon.
-- [ ] Afficher point bloquant.
-- [ ] Afficher source terrain.
-- [ ] Afficher cache hit / miss si disponible.
-- [ ] Afficher warnings.
-- [ ] Afficher erreurs techniques utiles.
-- [ ] Ajouter panneau repliable masqué par défaut.
-- [ ] Prévoir affichage mobile lisible.
-
-Critères d’acceptation :
-
-- [ ] L’utilisateur peut comprendre quel calcul a été effectué.
-- [ ] Le panneau ne surcharge pas l’écran principal.
-- [ ] Les informations sensibles ne sont pas exposées inutilement.
-- [ ] `npm run build` passe.
-
-## Epic 8 — Horizon 360 simplifié
+## Epic 6 — Horizon 360 simplifié
 
 Objectif : visualiser l’horizon effectif autour de l’observateur.
 
@@ -248,7 +196,7 @@ Critères d’acceptation :
 - [ ] `npm test` passe.
 - [ ] `npm run build` passe.
 
-## Epic 9 — Validation et polish V1.5
+## Epic 7 — Validation et polish V1.5
 
 Objectif : livrer une version confortable et cohérente.
 
@@ -257,9 +205,7 @@ Objectif : livrer une version confortable et cohérente.
 - [ ] Vérifier historique.
 - [ ] Vérifier cache.
 - [ ] Vérifier comparaison.
-- [ ] Vérifier URL partageable.
-- [ ] Vérifier export/import.
-- [ ] Vérifier diagnostic.
+- [x] Vérifier export/import.
 - [ ] Vérifier horizon 360.
 - [ ] Tester mobile.
 - [ ] Tester tablette.

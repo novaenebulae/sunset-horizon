@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { subscribeLocalDataChanges } from '@/lib/storage/localDataNotify'
 import { getPresetSettings } from './defaultCalculationSettings'
 import {
   isLocalStorageAvailable,
@@ -21,10 +22,24 @@ export function useCalculationSettings() {
   )
   const [error, setError] = useState<string | null>(null)
 
+  const reloadSettings = useCallback(() => {
+    setStorageAvailable(isLocalStorageAvailable())
+    setSettings(loadCalculationSettings())
+    setError(null)
+  }, [])
+
   useEffect(() => {
     setStorageAvailable(isLocalStorageAvailable())
     setSettings(loadCalculationSettings())
   }, [])
+
+  useEffect(() => {
+    return subscribeLocalDataChanges((source) => {
+      if (source === 'settings') {
+        reloadSettings()
+      }
+    })
+  }, [reloadSettings])
 
   const persist = useCallback((next: CalculationSettings) => {
     const validated = validateCalculationSettings(next)
@@ -88,6 +103,7 @@ export function useCalculationSettings() {
     setTerrainDebugEnabled,
     setTerrainCachePanelEnabled,
     resetSettings,
+    reloadSettings,
     dismissError,
   }
 }

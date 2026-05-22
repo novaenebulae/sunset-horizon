@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useCalculationHistory } from '@/features/history/useCalculationHistory'
 import type { CalculationSettings, PrecisionMode } from '@/features/settings/calculationSettingsTypes'
 import { useSavedSpots } from '@/features/spots/hooks/useSavedSpots'
@@ -46,6 +46,11 @@ export function useSpotComparison({
   const [historyError, setHistoryError] = useState<string | null>(null)
 
   const requestIdRef = useRef(0)
+
+  useEffect(() => {
+    const validIds = new Set(spots.map((s) => s.id))
+    setSelectedSpotIds((prev) => prev.filter((id) => validIds.has(id)))
+  }, [spots])
 
   const selectedSpots = useMemo(
     () => spots.filter((s) => selectedSpotIds.includes(s.id)),

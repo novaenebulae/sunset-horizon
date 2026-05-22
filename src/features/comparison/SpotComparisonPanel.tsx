@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { StatusBanner } from '@/components/StatusBanner'
 import { WarningBanner } from '@/components/WarningBanner'
 import type { CalculationSettings } from '@/features/settings/calculationSettingsTypes'
 import type { TerrainProviderId } from '@/features/terrain/terrainTypes'
@@ -251,22 +252,16 @@ export function SpotComparisonPanel({
                   Enregistrer les résultats réussis dans l&apos;historique
                 </button>
                 {historyStatus && (
-                  <p className="text-sm text-accent-horizon">{historyStatus}</p>
+                  <StatusBanner
+                    message={historyStatus}
+                    onDismiss={dismissHistoryStatus}
+                  />
                 )}
                 {historyError && (
                   <WarningBanner
                     message={historyError}
                     onDismiss={dismissHistoryError}
                   />
-                )}
-                {historyStatus && (
-                  <button
-                    type="button"
-                    className="text-xs text-text-secondary hover:underline"
-                    onClick={dismissHistoryStatus}
-                  >
-                    Fermer
-                  </button>
                 )}
               </div>
             )}

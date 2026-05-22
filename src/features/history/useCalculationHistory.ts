@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { subscribeLocalDataChanges } from '@/lib/storage/localDataNotify'
 import type { SunsetResult } from '@/features/horizon/horizonTypes'
 import type { CalculationSettings } from '@/features/settings/calculationSettingsTypes'
 import type { CalculationHistoryEntry } from './calculationHistoryTypes'
@@ -48,6 +49,14 @@ export function useCalculationHistory(validSpotIds: string[] = []) {
 
   useEffect(() => {
     refreshHistory()
+  }, [refreshHistory])
+
+  useEffect(() => {
+    return subscribeLocalDataChanges((source) => {
+      if (source === 'history' || source === 'spots') {
+        refreshHistory()
+      }
+    })
   }, [refreshHistory])
 
   const getEntriesForSpot = useCallback(

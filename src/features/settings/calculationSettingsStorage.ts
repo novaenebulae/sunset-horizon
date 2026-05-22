@@ -1,3 +1,4 @@
+import { notifyLocalDataChanged } from '@/lib/storage/localDataNotify'
 import { validateCalculationSettings } from './calculationSettingsValidation'
 import {
   CALCULATION_SETTINGS_SCHEMA_VERSION,
@@ -89,6 +90,7 @@ export function writeStoragePayload(
 
   try {
     storage.setItem(CALCULATION_SETTINGS_STORAGE_KEY, JSON.stringify(payload))
+    notifyLocalDataChanged('settings')
   } catch {
     throw new SettingsStorageError(
       'STORAGE_UNAVAILABLE',

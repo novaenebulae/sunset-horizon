@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { StatusBanner } from '@/components/StatusBanner'
 import { WarningBanner } from '@/components/WarningBanner'
 import { useCalculationHistory } from '@/features/history/useCalculationHistory'
 import type { CalculationSettings } from '@/features/settings/calculationSettingsTypes'
@@ -181,35 +182,14 @@ export function SavedSpotsSection({
         )}
 
         {spotsStatus && (
-          <div
-            role="status"
-            className="rounded-lg border border-accent-horizon/30 bg-accent-horizon/10 px-4 py-3 text-sm text-accent-horizon"
-          >
-            <p>{spotsStatus}</p>
-            <button
-              type="button"
-              onClick={dismissSpotsStatus}
-              className="mt-2 text-xs font-medium underline hover:no-underline"
-            >
-              Fermer
-            </button>
-          </div>
+          <StatusBanner message={spotsStatus} onDismiss={dismissSpotsStatus} />
         )}
 
         {historyStatus && (
-          <div
-            role="status"
-            className="rounded-lg border border-accent-horizon/30 bg-accent-horizon/10 px-4 py-3 text-sm text-accent-horizon"
-          >
-            <p>{historyStatus}</p>
-            <button
-              type="button"
-              onClick={dismissHistoryStatus}
-              className="mt-2 text-xs font-medium underline hover:no-underline"
-            >
-              Fermer
-            </button>
-          </div>
+          <StatusBanner
+            message={historyStatus}
+            onDismiss={dismissHistoryStatus}
+          />
         )}
 
         {historyError && (

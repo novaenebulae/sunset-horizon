@@ -13,6 +13,7 @@ import { SunsetResultCard, HorizonProfileChart } from '@/features/results'
 import { useHorizonSunset } from '@/features/horizon'
 import { useSolarData } from '@/features/solar'
 import { SpotComparisonPanel } from '@/features/comparison'
+import { ImportExportPanel } from '@/features/importExport'
 import { SavedSpotsSection } from '@/features/spots'
 import { CacheSettingsPanel } from '@/features/cache'
 import {
@@ -181,6 +182,7 @@ export function App() {
                 onReset={resetSettings}
                 onDismissError={dismissSettingsError}
               />
+              <ImportExportPanel />
               {calculationSettings.terrainCachePanelEnabled && (
                 <CacheSettingsPanel
                   profileFetchSource={horizon.profileFetchSource}

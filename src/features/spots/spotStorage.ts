@@ -1,3 +1,4 @@
+import { notifyLocalDataChanged } from '@/lib/storage/localDataNotify'
 import {
   SAVED_SPOTS_SCHEMA_VERSION,
   SAVED_SPOTS_STORAGE_KEY,
@@ -196,6 +197,7 @@ export function writeStoragePayload(payload: SavedSpotsStoragePayload): void {
 
   try {
     storage.setItem(SAVED_SPOTS_STORAGE_KEY, JSON.stringify(payload))
+    notifyLocalDataChanged('spots')
   } catch {
     throw new SpotStorageError(
       'STORAGE_UNAVAILABLE',

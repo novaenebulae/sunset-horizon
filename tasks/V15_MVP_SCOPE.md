@@ -14,8 +14,7 @@ La version 1.5 améliore :
 - la comparaison entre plusieurs spots ;
 - la persistance locale des résultats utiles ;
 - la performance avec cache local ;
-- le partage local / sans compte ;
-- la compréhension du calcul via un panneau diagnostic ;
+- le transfert local des données (export / import JSON) ;
 - une première visualisation globale de l’horizon autour de l’observateur.
 
 ## Contraintes conservées
@@ -44,8 +43,6 @@ La version 1.5 améliore :
 
 6. Historique local des calculs.
 7. Export / import JSON local.
-8. URL partageable sans backend.
-9. Panneau diagnostic du calcul.
 
 ## Hors périmètre V1.5
 
@@ -58,14 +55,16 @@ Ces fonctionnalités restent prévues pour une V2 ou une version ultérieure :
 - horizon 360 haute précision ;
 - LiDAR HD MNT / MNS / MNH ;
 - synchronisation cloud ;
-- comptes utilisateurs.
+- comptes utilisateurs ;
+- URL partageable sans backend ;
+- panneau diagnostic du calcul.
 
 ## Définition de “MVP V1.5 terminé”
 
 La V1.5 est considérée terminée si l’utilisateur peut :
 
 1. Ajuster le calcul avec un mode rapide / équilibré / précis.
-2. Comprendre les paramètres réellement utilisés par le calcul.
+2. Comprendre les paramètres réellement utilisés via les réglages avancés.
 3. Sauvegarder localement l’historique des derniers calculs.
 4. Comparer plusieurs spots sauvegardés pour une même date.
 5. Voir quel spot garde le soleil visible le plus tard.
@@ -73,11 +72,9 @@ La V1.5 est considérée terminée si l’utilisateur peut :
 7. Vider le cache local depuis l’interface.
 8. Exporter ses spots, réglages et historiques en JSON.
 9. Réimporter ce JSON dans un autre navigateur.
-10. Partager un lien contenant une position, une date et les réglages essentiels.
-11. Ouvrir un panneau diagnostic affichant les détails techniques du calcul.
-12. Lancer manuellement un horizon 360 simplifié sans bloquer l’interface.
-13. Conserver le parcours MVP initial intact.
-14. Utiliser l’application correctement sur mobile, tablette et desktop.
+10. Lancer manuellement un horizon 360 simplifié sans bloquer l’interface.
+11. Conserver le parcours MVP initial intact.
+12. Utiliser l’application correctement sur mobile, tablette et desktop.
 
 ## Ordre recommandé des prompts Cursor
 
@@ -85,11 +82,9 @@ La V1.5 est considérée terminée si l’utilisateur peut :
 2. `08B_V15_LOCAL_CALCULATION_HISTORY_PROMPT.md`
 3. `08C_V15_TERRAIN_PROFILE_CACHE_PROMPT.md`
 4. `08D_V15_SPOT_COMPARISON_PROMPT.md`
-5. `08E_V15_SHAREABLE_URL_PROMPT.md`
-6. `08F_V15_EXPORT_IMPORT_JSON_PROMPT.md`
-7. `08G_V15_DIAGNOSTIC_PANEL_PROMPT.md`
-8. `08H_V15_SIMPLIFIED_HORIZON_360_PROMPT.md`
-9. `08I_V15_FINAL_VALIDATION_AND_POLISH_PROMPT.md`
+5. `08F_V15_EXPORT_IMPORT_JSON_PROMPT.md`
+6. `08H_V15_SIMPLIFIED_HORIZON_360_PROMPT.md`
+7. `08I_V15_FINAL_VALIDATION_AND_POLISH_PROMPT.md`
 
 ## Risques principaux V1.5
 
@@ -103,7 +98,7 @@ Mesures : panneaux repliables, résultat principal prioritaire, détails techniq
 
 ### Incohérence des paramètres
 
-Mesures : enregistrer les réglages utilisés, intégrer les réglages dans les clés de cache, afficher le mode dans le diagnostic, exporter les réglages.
+Mesures : enregistrer les réglages utilisés, intégrer les réglages dans les clés de cache, afficher le mode dans l’interface des résultats, exporter les réglages.
 
 ### Données locales corrompues
 

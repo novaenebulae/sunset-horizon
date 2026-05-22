@@ -1,3 +1,4 @@
+import { notifyLocalDataChanged } from '@/lib/storage/localDataNotify'
 import { validateCalculationSettings } from '@/features/settings/calculationSettingsValidation'
 import { buildHistoryEntryFromResult } from './calculationHistoryFromResult'
 import type { BuildHistoryEntryParams } from './calculationHistoryFromResult'
@@ -201,6 +202,7 @@ export function writeHistoryPayload(
 
   try {
     storage.setItem(CALCULATION_HISTORY_STORAGE_KEY, JSON.stringify(payload))
+    notifyLocalDataChanged('history')
   } catch {
     throw new HistoryStorageError(
       'STORAGE_UNAVAILABLE',

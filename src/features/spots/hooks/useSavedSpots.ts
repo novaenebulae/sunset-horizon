@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { subscribeLocalDataChanges } from '@/lib/storage/localDataNotify'
 import type { ObserverPosition } from '@/features/map/types'
 import type { SunsetResult } from '@/features/horizon/horizonTypes'
 import type { HorizonSunsetState } from '@/features/horizon/hooks/useHorizonSunset'
@@ -45,6 +46,14 @@ export function useSavedSpots() {
 
   useEffect(() => {
     refreshSpots()
+  }, [refreshSpots])
+
+  useEffect(() => {
+    return subscribeLocalDataChanges((source) => {
+      if (source === 'spots') {
+        refreshSpots()
+      }
+    })
   }, [refreshSpots])
 
   const saveCurrentSpot = useCallback(
