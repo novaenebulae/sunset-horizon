@@ -108,34 +108,34 @@ Critères d’acceptation :
 
 Objectif : comparer plusieurs lieux sauvegardés pour une même date.
 
-- [ ] Créer `src/features/comparison/`.
-- [ ] Créer modèle `SpotComparisonResult`.
-- [ ] Sélectionner plusieurs spots.
-- [ ] Choisir une date commune.
-- [ ] Appliquer les réglages courants.
-- [ ] Lancer les calculs avec concurrence limitée.
-- [ ] Afficher loading par spot.
-- [ ] Afficher erreurs par spot.
-- [ ] Afficher heure officielle.
-- [ ] Afficher heure corrigée.
-- [ ] Afficher delta.
-- [ ] Afficher azimut.
-- [ ] Afficher distance du relief bloquant.
-- [ ] Afficher angle horizon.
-- [ ] Afficher source terrain.
-- [ ] Mettre en avant le spot avec coucher corrigé le plus tard.
-- [ ] Ajouter tri par heure corrigée, delta, nom et statut.
-- [ ] Ajouter limite de spots simultanés.
-- [ ] Ajouter option pour sauvegarder le résultat dans l’historique.
+- [x] Créer `src/features/comparison/`.
+- [x] Créer modèle `SpotComparisonResult`.
+- [x] Sélectionner plusieurs spots.
+- [x] Choisir une date commune.
+- [x] Appliquer les réglages courants.
+- [x] Lancer les calculs avec concurrence limitée.
+- [x] Afficher loading par spot.
+- [x] Afficher erreurs par spot.
+- [x] Afficher heure officielle.
+- [x] Afficher heure corrigée.
+- [x] Afficher delta.
+- [x] Afficher azimut.
+- [x] Afficher distance du relief bloquant.
+- [x] Afficher angle horizon.
+- [x] Afficher source terrain.
+- [x] Mettre en avant le spot avec coucher corrigé le plus tard.
+- [x] Ajouter tri par heure corrigée, delta, nom et statut.
+- [x] Ajouter limite de spots simultanés.
+- [x] Ajouter option pour sauvegarder le résultat dans l’historique.
 
 Critères d’acceptation :
 
-- [ ] La comparaison fonctionne avec au moins deux spots.
-- [ ] Une erreur sur un spot ne bloque pas les autres.
-- [ ] Le meilleur spot est clairement identifié.
-- [ ] L’UI reste lisible sur mobile.
-- [ ] `npm test` passe.
-- [ ] `npm run build` passe.
+- [x] La comparaison fonctionne avec au moins deux spots.
+- [x] Une erreur sur un spot ne bloque pas les autres.
+- [x] Le meilleur spot est clairement identifié.
+- [x] L’UI reste lisible sur mobile.
+- [x] `npm test` passe.
+- [x] `npm run build` passe.
 
 ## Epic 5 — URL partageable sans backend
 

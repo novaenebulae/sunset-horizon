@@ -12,6 +12,7 @@ import {
 import { SunsetResultCard, HorizonProfileChart } from '@/features/results'
 import { useHorizonSunset } from '@/features/horizon'
 import { useSolarData } from '@/features/solar'
+import { SpotComparisonPanel } from '@/features/comparison'
 import { SavedSpotsSection } from '@/features/spots'
 import { CacheSettingsPanel } from '@/features/cache'
 import {
@@ -223,7 +224,7 @@ export function App() {
             />
           </div>
 
-          <div className="order-7 min-w-0 lg:col-span-2 lg:row-start-3">
+          <div className="order-6 min-w-0 lg:col-span-2 lg:row-start-3">
             <SavedSpotsSection
               position={position}
               observationDate={observationDate}
@@ -232,6 +233,14 @@ export function App() {
               horizonResult={horizon.result}
               lastAddressLabel={lastAddressLabel}
               onLoadSpot={handleLoadSavedSpot}
+            />
+          </div>
+
+          <div className="order-7 min-w-0 lg:col-span-2 lg:row-start-4">
+            <SpotComparisonPanel
+              observationDate={observationDate}
+              calculationSettings={calculationSettings}
+              terrainProvider={effectiveTerrainProvider}
             />
           </div>
         </div>

@@ -150,26 +150,15 @@ export function SavedSpotsSection({
 
   return (
     <details
-      className="group rounded-xl border border-border bg-surface"
+      className="rounded-xl border border-border bg-surface"
       open={sectionOpen}
-      onToggle={(event) => {
-        if (window.matchMedia('(min-width: 1024px)').matches) return
-        setSectionOpen(event.currentTarget.open)
-      }}
+      onToggle={(event) => setSectionOpen(event.currentTarget.open)}
     >
-      <summary className="cursor-pointer list-none px-6 py-4 marker:content-none [&::-webkit-details-marker]:hidden lg:cursor-default lg:pointer-events-none">
+      <summary className="cursor-pointer list-none px-6 py-4 marker:content-none [&::-webkit-details-marker]:hidden">
         <div className="flex items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-2">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-text-secondary">
-              Spots sauvegardés
-            </h2>
-            <span
-              className="text-xs text-text-secondary lg:hidden"
-              aria-hidden
-            >
-              {spots.length > 0 ? `${spots.length}` : '—'}
-            </span>
-          </div>
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-text-secondary">
+            Spots sauvegardés
+          </h2>
           {position && !showForm && (
             <button
               type="button"
@@ -178,7 +167,7 @@ export function SavedSpotsSection({
                 event.preventDefault()
                 setShowForm(true)
               }}
-              className="pointer-events-auto hidden shrink-0 rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-primary transition-colors hover:bg-bg disabled:cursor-not-allowed disabled:opacity-50 lg:inline-flex"
+              className="hidden shrink-0 rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-primary transition-colors hover:bg-bg disabled:cursor-not-allowed disabled:opacity-50 lg:inline-flex"
             >
               Enregistrer ce spot
             </button>
@@ -186,7 +175,7 @@ export function SavedSpotsSection({
         </div>
       </summary>
 
-      <div className="space-y-4 border-t border-border px-6 pb-6 pt-4 lg:px-8">
+      <div className="space-y-4 border-t border-border px-6 pb-6 pt-4">
         {!spotsStorageAvailable && (
           <WarningBanner message="Le stockage local du navigateur est indisponible. Les spots ne peuvent pas être enregistrés." />
         )}
